@@ -2,17 +2,15 @@
 title: API Reference
 
 language_tabs:
-  - http 
-  - cUrl
-  - PHP
-  - Java
+  - shell 
+  - php
+  - java
 
 toc_footers:
   - <a href='http://kronometrix.io'>Sign Up for a Developer Key</a>
   - <a href='https://github.com/tripit/slate'>Documentation Powered by Slate</a>
 
 includes:
-  - errors
 
 search: true
 ---
@@ -35,19 +33,11 @@ The **Private API** is aimed towards *Kronometrix Agents*, allowing them to inse
 
 # Accessing the API
 
-To access the API (either public or private) you will need an *API Token*. The API Token can be obtained by logging in Kronometrix and accessing the section *Settings -> API Tokens*. You can generate multiple API Tokens and name them according to their uses. The API Tokens are related only with your user account and will allow access only to your subscriptions and datasources, according to the set up visibility.
-
-The API Token will be present in the API request's **header** under the field name "Token":
-
-`Token: <api_token>`
-
-The response from the server will be `200 OK` in case of success, or an http error code in case of failure. The body of the response will contain the text "OK" in case of success, or a description of the error in case of error (in JSON format)
-
-> Request:
+> HTTP POST Request:
 
 ```http
 POST /api/get_subscriptions HTTP/1.1
-Host: <host_ip> 
+Host: <host_ip>
 Token: invalid_token
 Content-Type: multipart/form-data; boundary=----WebKitFormBoundary7MA4YWxkTrZu0gW
 ```
@@ -62,115 +52,100 @@ Content-Type: multipart/form-data; boundary=----WebKitFormBoundary7MA4YWxkTrZu0g
 }
 ```
 
+To access the API (either public or private) you will need an *API Token*. The API Token can be obtained by logging in Kronometrix and accessing the section *Settings -> API Tokens*. You can generate multiple API Tokens and name them according to their uses. The API Tokens are related only with your user account and will allow access only to your subscriptions and datasources, according to the set up visibility.
+
+The API Token will be present in the API request's **header** under the field name "Token":
+
+`Token: <api_token>`
+
+The response from the server will be `200 OK` in case of success, or an http error code in case of failure. The body of the response will contain the text "OK" in case of success, or a description of the error in case of error (in JSON format)
+
 <aside class="notice">
-You must replace `<api_token>` with your personal API Token.
+You must replace <code>&lt;api_token&gt;</code> with your personal API Token.
 </aside>
 
-# Kittens
 
-## Get All Kittens
+# Public API
 
-```ruby
-require 'kittn'
+## List available subscriptions
 
-api = Kittn::APIClient.authorize!('meowmeowmeow')
-api.kittens.get
-```
-
-```python
-import kittn
-
-api = kittn.authorize('meowmeowmeow')
-api.kittens.get()
-```
+> Request
 
 ```shell
-curl "http://example.com/api/kittens"
-  -H "Authorization: meowmeowmeow"
+curl -X POST -H "Token: <api_token>" "http://<kronometrix_url>/api/get_subscriptions"
 ```
 
-> The above command returns JSON structured like this:
+```php
+<?php
+
+$request = new HttpRequest();
+$request->setUrl('http://<kronometrix_url>/api/get_subscriptions');
+$request->setMethod(HTTP_METH_POST);
+
+$request->setHeaders(array(
+  'token' => '<api_token>'
+));
+
+try {
+  $response = $request->send();
+
+  echo $response->getBody();
+} catch (HttpException $ex) {
+  echo $ex;
+}
+```
+
+```java
+OkHttpClient client = new OkHttpClient();
+
+Request request = new Request.Builder()
+  .url("http://<kronometrix_url>/api/get_subscriptions")
+  .post(null)
+  .addHeader("token", "<api_token>")
+  .build();
+
+Response response = client.newCall(request).execute();
+```
+
+> Response
 
 ```json
 [
   {
-    "id": 1,
-    "name": "Fluffums",
-    "breed": "calico",
-    "fluffiness": 6,
-    "cuteness": 7
+    "monitoring_object": "cpd",
+    "id": "998d1bd7d61e8850952902c3bc3a81f1",
+    "monitoring_object_name": "Computer Performance",
+    "name": "My Subscription",
+    "description": "This is an example subscription"
   },
   {
-    "id": 2,
-    "name": "Max",
-    "breed": "unknown",
-    "fluffiness": 5,
-    "cuteness": 10
+    "monitoring_object": "wpd",
+    "id": "08b861f5919722505166b81f95fde672",
+    "monitoring_object_name": "Web Application Framework Performance",
+    "name": "My Web Subscription",
+    "description": ""
   }
 ]
 ```
 
-This endpoint retrieves all kittens.
+This endpoint retreives the list of datasources the user has access to, with associated informations.
 
-### HTTP Request
+### Request
 
-`GET http://example.com/api/kittens`
+`http://<kronometrix_url>/api/get_subscriptions`
 
-### Query Parameters
+*No parameters needed*
 
-Parameter | Default | Description
---------- | ------- | -----------
-include_cats | false | If set to true, the result will also include cats.
-available | true | If set to false, the result will include kittens that have already been adopted.
+### Response
 
-<aside class="success">
-Remember — a happy kitten is an authenticated kitten!
-</aside>
+A JSON-encoded hash table, with the element "subscriptions" of type array, each element of the array corresponding to a subscription and having these fields:
 
-## Get a Specific Kitten
+Field | Details
+----- | -------
+id | The ID of the subscription
+name | The name of the subscription
+description | The description of the subscription
+monitoring_object | The ID of the monitoring object
+monitoring_object_name | The name of the monitoring object
 
-```ruby
-require 'kittn'
-
-api = Kittn::APIClient.authorize!('meowmeowmeow')
-api.kittens.get(2)
-```
-
-```python
-import kittn
-
-api = kittn.authorize('meowmeowmeow')
-api.kittens.get(2)
-```
-
-```shell
-curl "http://example.com/api/kittens/2"
-  -H "Authorization: meowmeowmeow"
-```
-
-> The above command returns JSON structured like this:
-
-```json
-{
-  "id": 2,
-  "name": "Max",
-  "breed": "unknown",
-  "fluffiness": 5,
-  "cuteness": 10
-}
-```
-
-This endpoint retrieves a specific kitten.
-
-<aside class="warning">Inside HTML code blocks like this one, you can't use Markdown, so use <code>&lt;code&gt;</code> blocks to denote code.</aside>
-
-### HTTP Request
-
-`GET http://example.com/kittens/<ID>`
-
-### URL Parameters
-
-Parameter | Description
---------- | -----------
-ID | The ID of the kitten to retrieve
 
