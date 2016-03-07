@@ -2,12 +2,13 @@
 title: API Reference
 
 language_tabs:
-  - shell
-  - ruby
-  - python
+  - http 
+  - cUrl
+  - PHP
+  - Java
 
 toc_footers:
-  - <a href='#'>Sign Up for a Developer Key</a>
+  - <a href='http://kronometrix.io'>Sign Up for a Developer Key</a>
   - <a href='https://github.com/tripit/slate'>Documentation Powered by Slate</a>
 
 includes:
@@ -18,44 +19,51 @@ search: true
 
 # Introduction
 
-Welcome to the Kittn API! You can use our API to access Kittn API endpoints, which can get information on various cats, kittens, and breeds in our database.
+This is the place where you will find details about the accessible API provided by Kronometrix for its users.
 
-We have language bindings in Shell, Ruby, and Python! You can view code examples in the dark area to the right, and you can switch the programming language of the examples with the tabs in the top right.
+The Kronometrix API can be accessed over HTTP, using standard POST requests.
 
-This example API documentation page was created with [Slate](https://github.com/tripit/slate). Feel free to edit it and use it as a base for your own API's documentation.
+The Kronometrix API can be structured in 2 main sections: the **Public API** and the **Private API**.
 
-# Authentication
+## Public API
 
-> To authorize, use this code:
+The **Public API** is being conceived to allow users to interact with the data in Kronometrix, by offering a way to list subscriptions and datasources an user has access to, to determine the data structures available and to query for statistical data in the application.
 
-```ruby
-require 'kittn'
+## Private API
 
-api = Kittn::APIClient.authorize!('meowmeowmeow')
+The **Private API** is aimed towards *Kronometrix Agents*, allowing them to insert data into Kronometrix. All recorders use the **Private API** to insert the recorded data into the datastructures stored with Kronometrix. This part of the API is also public, but has been called "private" because it is used internally by the two parts of the Kronometrix system (recorders and server) and is, generally, not used by the users themselves.
+
+# Accessing the API
+
+To access the API (either public or private) you will need an *API Token*. The API Token can be obtained by logging in Kronometrix and accessing the section *Settings -> API Tokens*. You can generate multiple API Tokens and name them according to their uses. The API Tokens are related only with your user account and will allow access only to your subscriptions and datasources, according to the set up visibility.
+
+The API Token will be present in the API request's **header** under the field name "Token":
+
+`Token: <api_token>`
+
+The response from the server will be `200 OK` in case of success, or an http error code in case of failure. The body of the response will contain the text "OK" in case of success, or a description of the error in case of error (in JSON format)
+
+> Request:
+
+```http
+POST /api/get_subscriptions HTTP/1.1
+Host: <host_ip> 
+Token: invalid_token
+Content-Type: multipart/form-data; boundary=----WebKitFormBoundary7MA4YWxkTrZu0gW
 ```
 
-```python
-import kittn
+> Response:
 
-api = kittn.authorize('meowmeowmeow')
 ```
+401 Unauthorized
 
-```shell
-# With shell, you can just pass the correct header with each request
-curl "api_endpoint_here"
-  -H "Authorization: meowmeowmeow"
+{
+  "error": "Invalid token"
+}
 ```
-
-> Make sure to replace `meowmeowmeow` with your API key.
-
-Kittn uses API keys to allow access to the API. You can register a new Kittn API key at our [developer portal](http://example.com/developers).
-
-Kittn expects for the API key to be included in all API requests to the server in a header that looks like the following:
-
-`Authorization: meowmeowmeow`
 
 <aside class="notice">
-You must replace <code>meowmeowmeow</code> with your personal API key.
+You must replace `<api_token>` with your personal API Token.
 </aside>
 
 # Kittens
