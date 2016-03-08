@@ -2,167 +2,320 @@
 title: API Reference
 
 language_tabs:
-  - shell
-  - ruby
-  - python
+  - shell 
+  - php
+  - java
 
 toc_footers:
-  - <a href='#'>Sign Up for a Developer Key</a>
+  - <a href='http://kronometrix.io'>Sign Up for a Developer Key</a>
   - <a href='https://github.com/tripit/slate'>Documentation Powered by Slate</a>
 
 includes:
-  - errors
 
 search: true
 ---
 
 # Introduction
 
-Welcome to the Kittn API! You can use our API to access Kittn API endpoints, which can get information on various cats, kittens, and breeds in our database.
+This is the place where you will find details about the accessible API provided by Kronometrix for its users.
 
-We have language bindings in Shell, Ruby, and Python! You can view code examples in the dark area to the right, and you can switch the programming language of the examples with the tabs in the top right.
+The Kronometrix API can be accessed over HTTP, using standard POST requests.
 
-This example API documentation page was created with [Slate](https://github.com/tripit/slate). Feel free to edit it and use it as a base for your own API's documentation.
+The Kronometrix API can be structured in 2 main sections: the **Public API** and the **Private API**.
 
-# Authentication
+## Public API
 
-> To authorize, use this code:
+The **Public API** is being conceived to allow users to interact with the data in Kronometrix, by offering a way to list subscriptions and datasources an user has access to, to determine the data structures available and to query for statistical data in the application.
 
-```ruby
-require 'kittn'
+## Private API
 
-api = Kittn::APIClient.authorize!('meowmeowmeow')
+The **Private API** is aimed towards *Kronometrix Agents*, allowing them to insert data into Kronometrix. All recorders use the **Private API** to insert the recorded data into the datastructures stored with Kronometrix. This part of the API is also public, but has been called "private" because it is used internally by the two parts of the Kronometrix system (recorders and server) and is, generally, not used by the users themselves.
+
+# Accessing the API
+
+> HTTP POST Request:
+
+```http
+POST /api/get_subscriptions HTTP/1.1
+Host: <host_ip>
+Token: invalid_token
+Content-Type: multipart/form-data; boundary=----WebKitFormBoundary7MA4YWxkTrZu0gW
 ```
 
-```python
-import kittn
+> Response:
 
-api = kittn.authorize('meowmeowmeow')
+```
+401 Unauthorized
+
+{
+  "error": "Invalid token"
+}
 ```
 
-```shell
-# With shell, you can just pass the correct header with each request
-curl "api_endpoint_here"
-  -H "Authorization: meowmeowmeow"
-```
+To access the API (either public or private) you will need an *API Token*. The API Token can be obtained by logging in Kronometrix and accessing the section *Settings -> API Tokens*. You can generate multiple API Tokens and name them according to their uses. The API Tokens are related only with your user account and will allow access only to your subscriptions and datasources, according to the set up visibility.
 
-> Make sure to replace `meowmeowmeow` with your API key.
+The API Token will be present in the API request's **header** under the field name "Token":
 
-Kittn uses API keys to allow access to the API. You can register a new Kittn API key at our [developer portal](http://example.com/developers).
+`Token: <api_token>`
 
-Kittn expects for the API key to be included in all API requests to the server in a header that looks like the following:
-
-`Authorization: meowmeowmeow`
+The response from the server will be `200 OK` in case of success, or an http error code in case of failure. The body of the response will contain the text "OK" in case of success, or a description of the error in case of error (in JSON format)
 
 <aside class="notice">
-You must replace <code>meowmeowmeow</code> with your personal API key.
+You must replace <code>&lt;api_token&gt;</code> with your personal API Token.
 </aside>
 
-# Kittens
 
-## Get All Kittens
+# Public API
 
-```ruby
-require 'kittn'
+## List available subscriptions
 
-api = Kittn::APIClient.authorize!('meowmeowmeow')
-api.kittens.get
-```
-
-```python
-import kittn
-
-api = kittn.authorize('meowmeowmeow')
-api.kittens.get()
-```
+> Request
 
 ```shell
-curl "http://example.com/api/kittens"
-  -H "Authorization: meowmeowmeow"
+curl -X POST -H "Token: <api_token>" "http://<kronometrix_url>/api/get_subscriptions"
 ```
 
-> The above command returns JSON structured like this:
+```php
+<?php
+
+$request = new HttpRequest();
+$request->setUrl('http://<kronometrix_url>/api/get_subscriptions');
+$request->setMethod(HTTP_METH_POST);
+
+$request->setHeaders(array(
+  'token' => '<api_token>'
+));
+
+try {
+  $response = $request->send();
+
+  echo $response->getBody();
+} catch (HttpException $ex) {
+  echo $ex;
+}
+```
+
+```java
+OkHttpClient client = new OkHttpClient();
+
+Request request = new Request.Builder()
+  .url("http://<kronometrix_url>/api/get_subscriptions")
+  .post(null)
+  .addHeader("token", "<api_token>")
+  .build();
+
+Response response = client.newCall(request).execute();
+```
+
+> Response
 
 ```json
 [
   {
-    "id": 1,
-    "name": "Fluffums",
-    "breed": "calico",
-    "fluffiness": 6,
-    "cuteness": 7
+    "monitoring_object": "cpd",
+    "user_role": [
+      "owner"
+    ],
+    "id": "998d1bd7d61e8850952902c3bc3a81f1",
+    "monitoring_object_name": "Computer Performance",
+    "name": "My Subscription",
+    "description": "This is an example subscription"
   },
   {
-    "id": 2,
-    "name": "Max",
-    "breed": "unknown",
-    "fluffiness": 5,
-    "cuteness": 10
+    "monitoring_object": "wpd",
+    "user_role": [
+      "admin"
+    ],
+    "id": "08b861f5919722505166b81f95fde672",
+    "monitoring_object_name": "Web Application Framework Performance",
+    "name": "My Web Subscription",
+    "description": ""
   }
 ]
 ```
 
-This endpoint retrieves all kittens.
+This endpoint retreives the list of subscriptions the user has access to, with associated informations.
 
-### HTTP Request
+### Request
 
-`GET http://example.com/api/kittens`
+`http://<kronometrix_url>/api/get_subscriptions`
 
-### Query Parameters
+*No parameters needed*
 
-Parameter | Default | Description
---------- | ------- | -----------
-include_cats | false | If set to true, the result will also include cats.
-available | true | If set to false, the result will include kittens that have already been adopted.
+### Response
 
-<aside class="success">
-Remember — a happy kitten is an authenticated kitten!
-</aside>
+A JSON-encoded array, each element of the array corresponding to a subscription and having these fields:
 
-## Get a Specific Kitten
+Field | Details
+----- | -------
+id | The ID of the subscription
+name | The name of the subscription
+description | The description of the subscription
+monitoring_object | The ID of the monitoring object
+monitoring_object_name | The name of the monitoring object
+user_role | Array of roles the user has for this subscription
 
-```ruby
-require 'kittn'
+## List subscription's datasources
 
-api = Kittn::APIClient.authorize!('meowmeowmeow')
-api.kittens.get(2)
-```
+This endpoint retreives the list of datasources which correspond to a subscription and which can be accessed by the user.
 
-```python
-import kittn
-
-api = kittn.authorize('meowmeowmeow')
-api.kittens.get(2)
-```
+> Request
 
 ```shell
-curl "http://example.com/api/kittens/2"
-  -H "Authorization: meowmeowmeow"
+curl -X POST -H "Token: <api_token>" -d '{
+    "params": {
+        "sid": "<subscription_id>"
+    }
+}' "http://<kronomentrix_url>/api/get_ds"
 ```
 
-> The above command returns JSON structured like this:
+```php
+<?php
 
-```json
-{
-  "id": 2,
-  "name": "Max",
-  "breed": "unknown",
-  "fluffiness": 5,
-  "cuteness": 10
+$request = new HttpRequest();
+$request->setUrl('http://<kronometrix_url>/api/get_ds');
+$request->setMethod(HTTP_METH_POST);
+
+$request->setHeaders(array(
+  'token' => '<api_token>'
+));
+
+$request->setBody('{
+    "params": {
+        "sid": "<subscription_id>"
+    }
+}');
+
+try {
+  $response = $request->send();
+
+  echo $response->getBody();
+} catch (HttpException $ex) {
+  echo $ex;
 }
 ```
 
-This endpoint retrieves a specific kitten.
+```java
+OkHttpClient client = new OkHttpClient();
 
-<aside class="warning">Inside HTML code blocks like this one, you can't use Markdown, so use <code>&lt;code&gt;</code> blocks to denote code.</aside>
+MediaType mediaType = MediaType.parse("application/octet-stream");
+RequestBody body = RequestBody.create(mediaType, "{\n    \"params\": {\n        \"sid\": \"<subscription_id>\"\n    }\n}");
+Request request = new Request.Builder()
+  .url("http://<kronometrix_url>/api/get_ds")
+  .post(body)
+  .addHeader("token", "<api_token>")
+  .build();
 
-### HTTP Request
+Response response = client.newCall(request).execute();
+```
 
-`GET http://example.com/kittens/<ID>`
+> Response
 
-### URL Parameters
+```json
+[
+  {
+    "devices": {
+      "cpu6": [
+        "win-cpurec"
+      ],
+      "e1iexpress": [
+        "win-nicrec"
+      ],
+      "cpu2": [
+        "win-cpurec"
+      ],
+      "cpu1": [
+        "win-cpurec"
+      ],
+      "diskD": [
+        "win-diskrec"
+      ],
+      "cpu7": [
+        "win-cpurec"
+      ],
+      "cpu0": [
+        "win-cpurec"
+      ],
+      "system": [
+        "win-sysrec",
+        "win-hdwrec"
+      ],
+      "cpu4": [
+        "win-cpurec"
+      ],
+      "diskC": [
+        "win-diskrec"
+      ],
+      "cpu3": [
+        "win-cpurec"
+      ],
+      "cpu5": [
+        "win-cpurec"
+      ]
+    },
+    "id": "527debbd-c89b-5ea9-8052-ea8a4ae93cee",
+    "name": "ds-name1"
+  },
+  {
+    "devices": {
+      "dm-0": [
+        "linux-diskrec"
+      ],
+      "cpu2": [
+        "linux-cpurec"
+      ],
+      "eth0": [
+        "linux-nicrec"
+      ],
+      "cpu1": [
+        "linux-cpurec"
+      ],
+      "sda2": [
+        "linux-diskrec"
+      ],
+      "dm-1": [
+        "linux-diskrec"
+      ],
+      "cpu0": [
+        "linux-cpurec"
+      ],
+      "sda1": [
+        "linux-diskrec"
+      ],
+      "system": [
+        "linux-sysrec",
+        "linux-hdwrec"
+      ],
+      "sda5": [
+        "linux-diskrec"
+      ],
+      "sda": [
+        "linux-diskrec"
+      ],
+      "cpu3": [
+        "linux-cpurec"
+      ]
+    },
+    "id": "566ac121-59c7-509d-92e0-028b3c8d6154",
+    "name": "other-ds"
+  }
+]
+```
 
-Parameter | Description
---------- | -----------
-ID | The ID of the kitten to retrieve
+### Request
 
+`http://<kronometrix_url>/api/get_ds`
+
+Parameter | Details
+--------- | -------
+sid | Subscription ID for which to query for datasources
+
+### Response
+
+A JSON-encoded array, each element of the array corresponding to a datasource and having these fields:
+
+Field | Details
+----- | -------
+id | The ID of the datasource
+name | The name of the datasource
+devices | A hash-table of devices available for each datasource; each element contains the name of the device as key and an array of message IDs as the value of the hash
