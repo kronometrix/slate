@@ -215,43 +215,18 @@ Response response = client.newCall(request).execute();
 [
   {
     "devices": {
-      "cpu6": [
-        "win-cpurec"
-      ],
-      "e1iexpress": [
-        "win-nicrec"
-      ],
-      "cpu2": [
-        "win-cpurec"
-      ],
-      "cpu1": [
-        "win-cpurec"
-      ],
-      "diskD": [
-        "win-diskrec"
-      ],
-      "cpu7": [
-        "win-cpurec"
-      ],
-      "cpu0": [
-        "win-cpurec"
-      ],
-      "system": [
-        "win-sysrec",
-        "win-hdwrec"
-      ],
-      "cpu4": [
-        "win-cpurec"
-      ],
-      "diskC": [
-        "win-diskrec"
-      ],
-      "cpu3": [
-        "win-cpurec"
-      ],
-      "cpu5": [
-        "win-cpurec"
-      ]
+      "cpu6": [ "win-cpurec" ],
+      "e1iexpress": [ "win-nicrec" ],
+      "cpu2": [ "win-cpurec" ],
+      "cpu1": [ "win-cpurec" ],
+      "diskD": [ "win-diskrec" ],
+      "cpu7": [ "win-cpurec" ],
+      "cpu0": [ "win-cpurec" ],
+      "system": [ "win-sysrec", "win-hdwrec" ],
+      "cpu4": [ "win-cpurec" ],
+      "diskC": [ "win-diskrec" ],
+      "cpu3": [ "win-cpurec" ],
+      "cpu5": [ "win-cpurec" ]
     },
     "id": "527debbd-c89b-5ea9-8052-ea8a4ae93cee",
     "name": "ds-name1",
@@ -259,43 +234,18 @@ Response response = client.newCall(request).execute();
   },
   {
     "devices": {
-      "dm-0": [
-        "linux-diskrec"
-      ],
-      "cpu2": [
-        "linux-cpurec"
-      ],
-      "eth0": [
-        "linux-nicrec"
-      ],
-      "cpu1": [
-        "linux-cpurec"
-      ],
-      "sda2": [
-        "linux-diskrec"
-      ],
-      "dm-1": [
-        "linux-diskrec"
-      ],
-      "cpu0": [
-        "linux-cpurec"
-      ],
-      "sda1": [
-        "linux-diskrec"
-      ],
-      "system": [
-        "linux-sysrec",
-        "linux-hdwrec"
-      ],
-      "sda5": [
-        "linux-diskrec"
-      ],
-      "sda": [
-        "linux-diskrec"
-      ],
-      "cpu3": [
-        "linux-cpurec"
-      ]
+      "dm-0": [ "linux-diskrec" ],
+      "cpu2": [ "linux-cpurec" ],
+      "eth0": [ "linux-nicrec" ],
+      "cpu1": [ "linux-cpurec" ],
+      "sda2": [ "linux-diskrec" ],
+      "dm-1": [ "linux-diskrec" ],
+      "cpu0": [ "linux-cpurec" ],
+      "sda1": [ "linux-diskrec" ],
+      "system": [ "linux-sysrec", "linux-hdwrec" ],
+      "sda5": [ "linux-diskrec" ],
+      "sda": [ "linux-diskrec" ],
+      "cpu3": [ "linux-cpurec" ]
     },
     "id": "566ac121-59c7-509d-92e0-028b3c8d6154",
     "name": "other-ds",
@@ -325,6 +275,75 @@ devices | A hash-table of devices available for each datasource; each element co
 
 ## List available statistics
 
+```shell
+curl -X POST -H "Token: <api_token>" -d '{
+    "params": {
+        "message": "<message_id>"
+    }
+}' "http://<kronometrix_url>/api/get_stats"
+```
+
+```php
+<?php
+
+$request = new HttpRequest();
+$request->setUrl('http://<kronometrix_url>/api/get_stats');
+$request->setMethod(HTTP_METH_POST);
+
+$request->setHeaders(array(
+  'token' => '<api_token>'
+));
+
+$request->setBody('{
+    "params": {
+        "message": "<message_id>"
+    }
+}');
+
+try {
+  $response = $request->send();
+
+  echo $response->getBody();
+} catch (HttpException $ex) {
+  echo $ex;
+}
+```
+
+```java
+OkHttpClient client = new OkHttpClient();
+
+MediaType mediaType = MediaType.parse("application/octet-stream");
+RequestBody body = RequestBody.create(mediaType, "{\n    \"params\": {\n        \"message\": \"<message_id>\"\n    }\n}");
+Request request = new Request.Builder()
+  .url("http://<kronometrix_url>/api/get_stats")
+  .post(body)
+  .addHeader("token", "<api_token>")
+  .build();
+
+Response response = client.newCall(request).execute();
+```
+
+> Response
+
+```json
+{
+  "monitoring_object": "cpd",
+  "message": "linux-sysrec",
+  "stats": [
+    {
+      "name": "cpupct",
+      "functions": {
+        "MAX": [ [300, 300 ], [10800, 60], [21600, 300], [43200, 900], [86400, 1800], [259200, 3600], [604800, 10800], [2592000, 43200], [7776000, 86400 ] ],
+        "SUM": [ ... ],
+        "COUNT": [ ... ],
+        "MIN": [ ... ]
+      }
+    },
+    ...
+  ]
+}
+```
+
 This endpoint lists the available statistics with intervals for a certain message. The message ID is the one listed for each device of the datasource.
 
 ### Request
@@ -345,4 +364,113 @@ monitoring_object | The ID of the monitoring object
 message | The message ID (same with the "message" parameter sent)
 stats | An array of objects, each object (hash-table) having the fields "name" representing the parameter name and the field "functions" containing an array of functions (hash table). Each element of the "functions" hash has the aggregation function as key ("MIN", "MAX", "SUM", "COUNT", "LAST", "PERCENTILE") and an array of intervals as value. Each interval is an array of 2 elements, first element representing the interval width in seconds, and the second element representing the resolution in seconds.
 
+## Get statistical data
 
+> Request
+
+```shell
+curl -X POST -H "Token: <api_token>" -d '{
+    "params": {
+        "sid": "9ee583c7d0a8b314c947882fdcd922ca",
+        "dsid": "527debbd-c89b-5ea9-8052-ea8a4ae93cee",
+        "device": "system",
+        "message": "win-sysrec",
+        "param": "cpupct",
+        "function": "AVG",
+        "interval": "10800",
+        "resolution": "60"
+    }
+}' "http://<kronometrix_url>/api/get_values"
+```
+
+```php
+<?php
+
+$request = new HttpRequest();
+$request->setUrl('http://<kronometrix_url>/api/get_values');
+$request->setMethod(HTTP_METH_POST);
+
+$request->setHeaders(array(
+  'token' => '<api_token>'
+));
+
+$request->setBody('{
+    "params": {
+        "sid": "9ee583c7d0a8b314c947882fdcd922ca",
+        "dsid": "527debbd-c89b-5ea9-8052-ea8a4ae93cee",
+        "device": "system",
+        "message": "win-sysrec",
+        "param": "cpupct",
+        "function": "AVG",
+        "interval": "10800",
+        "resolution": "60"
+    }
+}');
+
+try {
+  $response = $request->send();
+
+  echo $response->getBody();
+} catch (HttpException $ex) {
+  echo $ex;
+}
+```
+
+```java
+OkHttpClient client = new OkHttpClient();
+
+MediaType mediaType = MediaType.parse("application/octet-stream");
+RequestBody body = RequestBody.create(mediaType, "{\n    \"params\": {\n        \"sid\": \"9ee583c7d0a8b314c947882fdcd922ca\",\n        \"dsid\": \"527debbd-c89b-5ea9-8052-ea8a4ae93cee\",\n        \"device\": \"system\",\n        \"message\": \"win-sysrec\",\n        \"param\": \"cpupct\",\n        \"function\": \"AVG\",\n        \"interval\": \"10800\",\n        \"resolution\": \"60\"\n    }\n}");
+Request request = new Request.Builder()
+  .url("http://<kronometrix_url>/api/get_values")
+  .post(body)
+  .addHeader("token", "<api_token>")
+  .build();
+
+Response response = client.newCall(request).execute();
+```
+
+> Response
+
+```json
+[
+  [
+    1457441220000,
+    3.03
+  ],
+  [
+    1457441280000,
+    3.25
+  ],
+  [
+    1457441340000,
+    3.08
+  ],
+  [
+    1457441400000,
+    2.91
+  ]
+  ...
+]
+```
+
+This endpoint lists statistical data for the required datasource, device, message, parameter, function, interval and resolution.
+
+### Request
+
+`http://<kronometrix_url>/api/get_values`
+
+Parameter | Details
+--------- | -------
+sid | Subscription ID
+dsid | Datasource ID
+device | Device ID
+message | Message ID
+param | Parameter name
+function | Aggregation function
+interval | Interval width
+resolution | Resolution
+
+### Response
+
+A JSON-encoded array, each element of the array being an array of 2 elements, the first element representing **the unix timestamp in milliseconds** (multiplied by 1000), and the second element representing the value of the parameter for that timestamp. The second value may be *null*, which means that there is not an available value for that timestamp.
