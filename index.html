@@ -212,6 +212,9 @@ You must replace <code>&lt;api_token&gt;</code> with your personal API Token.
 <pre class="highlight json"><code><span class="p">[</span><span class="w">
   </span><span class="p">{</span><span class="w">
     </span><span class="nt">"monitoring_object"</span><span class="p">:</span><span class="w"> </span><span class="s2">"cpd"</span><span class="p">,</span><span class="w">
+    </span><span class="nt">"user_role"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+      </span><span class="s2">"owner"</span><span class="w">
+    </span><span class="p">],</span><span class="w">
     </span><span class="nt">"id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"998d1bd7d61e8850952902c3bc3a81f1"</span><span class="p">,</span><span class="w">
     </span><span class="nt">"monitoring_object_name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Computer Performance"</span><span class="p">,</span><span class="w">
     </span><span class="nt">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"My Subscription"</span><span class="p">,</span><span class="w">
@@ -219,6 +222,9 @@ You must replace <code>&lt;api_token&gt;</code> with your personal API Token.
   </span><span class="p">},</span><span class="w">
   </span><span class="p">{</span><span class="w">
     </span><span class="nt">"monitoring_object"</span><span class="p">:</span><span class="w"> </span><span class="s2">"wpd"</span><span class="p">,</span><span class="w">
+    </span><span class="nt">"user_role"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+      </span><span class="s2">"admin"</span><span class="w">
+    </span><span class="p">],</span><span class="w">
     </span><span class="nt">"id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"08b861f5919722505166b81f95fde672"</span><span class="p">,</span><span class="w">
     </span><span class="nt">"monitoring_object_name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Web Application Framework Performance"</span><span class="p">,</span><span class="w">
     </span><span class="nt">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"My Web Subscription"</span><span class="p">,</span><span class="w">
@@ -227,7 +233,7 @@ You must replace <code>&lt;api_token&gt;</code> with your personal API Token.
 </span><span class="p">]</span><span class="w">
 </span></code></pre>
 
-<p>This endpoint retreives the list of datasources the user has access to, with associated informations.</p>
+<p>This endpoint retreives the list of subscriptions the user has access to, with associated informations.</p>
 
 <h3 id="request">Request</h3>
 
@@ -237,7 +243,7 @@ You must replace <code>&lt;api_token&gt;</code> with your personal API Token.
 
 <h3 id="response">Response</h3>
 
-<p>A JSON-encoded hash table, with the element &ldquo;subscriptions&rdquo; of type array, each element of the array corresponding to a subscription and having these fields:</p>
+<p>A JSON-encoded array, each element of the array corresponding to a subscription and having these fields:</p>
 
 <table><thead>
 <tr>
@@ -264,6 +270,193 @@ You must replace <code>&lt;api_token&gt;</code> with your personal API Token.
 <tr>
 <td>monitoring_object_name</td>
 <td>The name of the monitoring object</td>
+</tr>
+<tr>
+<td>user_role</td>
+<td>Array of roles the user has for this subscription</td>
+</tr>
+</tbody></table>
+
+<h2 id="list-subscription-39-s-datasources">List subscription&rsquo;s datasources</h2>
+
+<p>This endpoint retreives the list of datasources which correspond to a subscription and which can be accessed by the user.</p>
+
+<blockquote>
+<p>Request</p>
+</blockquote>
+<pre class="highlight shell"><code>curl -X POST -H <span class="s2">"Token: &lt;api_token&gt;"</span> -d <span class="s1">'{
+    "params": {
+        "sid": "&lt;subscription_id&gt;"
+    }
+}'</span> <span class="s2">"http://&lt;kronomentrix_url&gt;/api/get_ds"</span>
+</code></pre>
+<pre class="highlight php"><code><span class="cp">&lt;?php</span>
+
+<span class="nv">$request</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">HttpRequest</span><span class="p">();</span>
+<span class="nv">$request</span><span class="o">-&gt;</span><span class="na">setUrl</span><span class="p">(</span><span class="s1">'http://&lt;kronometrix_url&gt;/api/get_ds'</span><span class="p">);</span>
+<span class="nv">$request</span><span class="o">-&gt;</span><span class="na">setMethod</span><span class="p">(</span><span class="nx">HTTP_METH_POST</span><span class="p">);</span>
+
+<span class="nv">$request</span><span class="o">-&gt;</span><span class="na">setHeaders</span><span class="p">(</span><span class="k">array</span><span class="p">(</span>
+  <span class="s1">'token'</span> <span class="o">=&gt;</span> <span class="s1">'&lt;api_token&gt;'</span>
+<span class="p">));</span>
+
+<span class="nv">$request</span><span class="o">-&gt;</span><span class="na">setBody</span><span class="p">(</span><span class="s1">'{
+    "params": {
+        "sid": "&lt;subscription_id&gt;"
+    }
+}'</span><span class="p">);</span>
+
+<span class="k">try</span> <span class="p">{</span>
+  <span class="nv">$response</span> <span class="o">=</span> <span class="nv">$request</span><span class="o">-&gt;</span><span class="na">send</span><span class="p">();</span>
+
+  <span class="k">echo</span> <span class="nv">$response</span><span class="o">-&gt;</span><span class="na">getBody</span><span class="p">();</span>
+<span class="p">}</span> <span class="k">catch</span> <span class="p">(</span><span class="nx">HttpException</span> <span class="nv">$ex</span><span class="p">)</span> <span class="p">{</span>
+  <span class="k">echo</span> <span class="nv">$ex</span><span class="p">;</span>
+<span class="p">}</span>
+</code></pre>
+<pre class="highlight java"><code><span class="n">OkHttpClient</span> <span class="n">client</span> <span class="o">=</span> <span class="k">new</span> <span class="n">OkHttpClient</span><span class="o">();</span>
+
+<span class="n">MediaType</span> <span class="n">mediaType</span> <span class="o">=</span> <span class="n">MediaType</span><span class="o">.</span><span class="na">parse</span><span class="o">(</span><span class="s">"application/octet-stream"</span><span class="o">);</span>
+<span class="n">RequestBody</span> <span class="n">body</span> <span class="o">=</span> <span class="n">RequestBody</span><span class="o">.</span><span class="na">create</span><span class="o">(</span><span class="n">mediaType</span><span class="o">,</span> <span class="s">"{\n    \"params\": {\n        \"sid\": \"&lt;subscription_id&gt;\"\n    }\n}"</span><span class="o">);</span>
+<span class="n">Request</span> <span class="n">request</span> <span class="o">=</span> <span class="k">new</span> <span class="n">Request</span><span class="o">.</span><span class="na">Builder</span><span class="o">()</span>
+  <span class="o">.</span><span class="na">url</span><span class="o">(</span><span class="s">"http://&lt;kronometrix_url&gt;/api/get_ds"</span><span class="o">)</span>
+  <span class="o">.</span><span class="na">post</span><span class="o">(</span><span class="n">body</span><span class="o">)</span>
+  <span class="o">.</span><span class="na">addHeader</span><span class="o">(</span><span class="s">"token"</span><span class="o">,</span> <span class="s">"&lt;api_token&gt;"</span><span class="o">)</span>
+  <span class="o">.</span><span class="na">build</span><span class="o">();</span>
+
+<span class="n">Response</span> <span class="n">response</span> <span class="o">=</span> <span class="n">client</span><span class="o">.</span><span class="na">newCall</span><span class="o">(</span><span class="n">request</span><span class="o">).</span><span class="na">execute</span><span class="o">();</span>
+</code></pre>
+
+<blockquote>
+<p>Response</p>
+</blockquote>
+<pre class="highlight json"><code><span class="p">[</span><span class="w">
+  </span><span class="p">{</span><span class="w">
+    </span><span class="nt">"devices"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+      </span><span class="nt">"cpu6"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+        </span><span class="s2">"win-cpurec"</span><span class="w">
+      </span><span class="p">],</span><span class="w">
+      </span><span class="nt">"e1iexpress"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+        </span><span class="s2">"win-nicrec"</span><span class="w">
+      </span><span class="p">],</span><span class="w">
+      </span><span class="nt">"cpu2"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+        </span><span class="s2">"win-cpurec"</span><span class="w">
+      </span><span class="p">],</span><span class="w">
+      </span><span class="nt">"cpu1"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+        </span><span class="s2">"win-cpurec"</span><span class="w">
+      </span><span class="p">],</span><span class="w">
+      </span><span class="nt">"diskD"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+        </span><span class="s2">"win-diskrec"</span><span class="w">
+      </span><span class="p">],</span><span class="w">
+      </span><span class="nt">"cpu7"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+        </span><span class="s2">"win-cpurec"</span><span class="w">
+      </span><span class="p">],</span><span class="w">
+      </span><span class="nt">"cpu0"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+        </span><span class="s2">"win-cpurec"</span><span class="w">
+      </span><span class="p">],</span><span class="w">
+      </span><span class="nt">"system"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+        </span><span class="s2">"win-sysrec"</span><span class="p">,</span><span class="w">
+        </span><span class="s2">"win-hdwrec"</span><span class="w">
+      </span><span class="p">],</span><span class="w">
+      </span><span class="nt">"cpu4"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+        </span><span class="s2">"win-cpurec"</span><span class="w">
+      </span><span class="p">],</span><span class="w">
+      </span><span class="nt">"diskC"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+        </span><span class="s2">"win-diskrec"</span><span class="w">
+      </span><span class="p">],</span><span class="w">
+      </span><span class="nt">"cpu3"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+        </span><span class="s2">"win-cpurec"</span><span class="w">
+      </span><span class="p">],</span><span class="w">
+      </span><span class="nt">"cpu5"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+        </span><span class="s2">"win-cpurec"</span><span class="w">
+      </span><span class="p">]</span><span class="w">
+    </span><span class="p">},</span><span class="w">
+    </span><span class="nt">"id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"527debbd-c89b-5ea9-8052-ea8a4ae93cee"</span><span class="p">,</span><span class="w">
+    </span><span class="nt">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"ds-name1"</span><span class="w">
+  </span><span class="p">},</span><span class="w">
+  </span><span class="p">{</span><span class="w">
+    </span><span class="nt">"devices"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+      </span><span class="nt">"dm-0"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+        </span><span class="s2">"linux-diskrec"</span><span class="w">
+      </span><span class="p">],</span><span class="w">
+      </span><span class="nt">"cpu2"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+        </span><span class="s2">"linux-cpurec"</span><span class="w">
+      </span><span class="p">],</span><span class="w">
+      </span><span class="nt">"eth0"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+        </span><span class="s2">"linux-nicrec"</span><span class="w">
+      </span><span class="p">],</span><span class="w">
+      </span><span class="nt">"cpu1"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+        </span><span class="s2">"linux-cpurec"</span><span class="w">
+      </span><span class="p">],</span><span class="w">
+      </span><span class="nt">"sda2"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+        </span><span class="s2">"linux-diskrec"</span><span class="w">
+      </span><span class="p">],</span><span class="w">
+      </span><span class="nt">"dm-1"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+        </span><span class="s2">"linux-diskrec"</span><span class="w">
+      </span><span class="p">],</span><span class="w">
+      </span><span class="nt">"cpu0"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+        </span><span class="s2">"linux-cpurec"</span><span class="w">
+      </span><span class="p">],</span><span class="w">
+      </span><span class="nt">"sda1"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+        </span><span class="s2">"linux-diskrec"</span><span class="w">
+      </span><span class="p">],</span><span class="w">
+      </span><span class="nt">"system"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+        </span><span class="s2">"linux-sysrec"</span><span class="p">,</span><span class="w">
+        </span><span class="s2">"linux-hdwrec"</span><span class="w">
+      </span><span class="p">],</span><span class="w">
+      </span><span class="nt">"sda5"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+        </span><span class="s2">"linux-diskrec"</span><span class="w">
+      </span><span class="p">],</span><span class="w">
+      </span><span class="nt">"sda"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+        </span><span class="s2">"linux-diskrec"</span><span class="w">
+      </span><span class="p">],</span><span class="w">
+      </span><span class="nt">"cpu3"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+        </span><span class="s2">"linux-cpurec"</span><span class="w">
+      </span><span class="p">]</span><span class="w">
+    </span><span class="p">},</span><span class="w">
+    </span><span class="nt">"id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"566ac121-59c7-509d-92e0-028b3c8d6154"</span><span class="p">,</span><span class="w">
+    </span><span class="nt">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"other-ds"</span><span class="w">
+  </span><span class="p">}</span><span class="w">
+</span><span class="p">]</span><span class="w">
+</span></code></pre>
+
+<h3 id="request">Request</h3>
+
+<p><code class="prettyprint">http://&lt;kronometrix_url&gt;/api/get_ds</code></p>
+
+<table><thead>
+<tr>
+<th>Parameter</th>
+<th>Details</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>sid</td>
+<td>Subscription ID for which to query for datasources</td>
+</tr>
+</tbody></table>
+
+<h3 id="response">Response</h3>
+
+<p>A JSON-encoded array, each element of the array corresponding to a datasource and having these fields:</p>
+
+<table><thead>
+<tr>
+<th>Field</th>
+<th>Details</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>id</td>
+<td>The ID of the datasource</td>
+</tr>
+<tr>
+<td>name</td>
+<td>The name of the datasource</td>
+</tr>
+<tr>
+<td>devices</td>
+<td>A hash-table of devices available for each datasource; each element contains the name of the device as key and an array of message IDs as the value of the hash</td>
 </tr>
 </tbody></table>
 
