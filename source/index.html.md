@@ -113,6 +113,9 @@ Response response = client.newCall(request).execute();
 [
   {
     "monitoring_object": "cpd",
+    "user_role": [
+      "owner"
+    ],
     "id": "998d1bd7d61e8850952902c3bc3a81f1",
     "monitoring_object_name": "Computer Performance",
     "name": "My Subscription",
@@ -120,6 +123,9 @@ Response response = client.newCall(request).execute();
   },
   {
     "monitoring_object": "wpd",
+    "user_role": [
+      "admin"
+    ],
     "id": "08b861f5919722505166b81f95fde672",
     "monitoring_object_name": "Web Application Framework Performance",
     "name": "My Web Subscription",
@@ -128,7 +134,7 @@ Response response = client.newCall(request).execute();
 ]
 ```
 
-This endpoint retreives the list of datasources the user has access to, with associated informations.
+This endpoint retreives the list of subscriptions the user has access to, with associated informations.
 
 ### Request
 
@@ -138,7 +144,7 @@ This endpoint retreives the list of datasources the user has access to, with ass
 
 ### Response
 
-A JSON-encoded hash table, with the element "subscriptions" of type array, each element of the array corresponding to a subscription and having these fields:
+A JSON-encoded array, each element of the array corresponding to a subscription and having these fields:
 
 Field | Details
 ----- | -------
@@ -147,5 +153,169 @@ name | The name of the subscription
 description | The description of the subscription
 monitoring_object | The ID of the monitoring object
 monitoring_object_name | The name of the monitoring object
+user_role | Array of roles the user has for this subscription
 
+## List subscription's datasources
 
+This endpoint retreives the list of datasources which correspond to a subscription and which can be accessed by the user.
+
+> Request
+
+```shell
+curl -X POST -H "Token: <api_token>" -d '{
+    "params": {
+        "sid": "<subscription_id>"
+    }
+}' "http://<kronomentrix_url>/api/get_ds"
+```
+
+```php
+<?php
+
+$request = new HttpRequest();
+$request->setUrl('http://<kronometrix_url>/api/get_ds');
+$request->setMethod(HTTP_METH_POST);
+
+$request->setHeaders(array(
+  'token' => '<api_token>'
+));
+
+$request->setBody('{
+    "params": {
+        "sid": "<subscription_id>"
+    }
+}');
+
+try {
+  $response = $request->send();
+
+  echo $response->getBody();
+} catch (HttpException $ex) {
+  echo $ex;
+}
+```
+
+```java
+OkHttpClient client = new OkHttpClient();
+
+MediaType mediaType = MediaType.parse("application/octet-stream");
+RequestBody body = RequestBody.create(mediaType, "{\n    \"params\": {\n        \"sid\": \"<subscription_id>\"\n    }\n}");
+Request request = new Request.Builder()
+  .url("http://<kronometrix_url>/api/get_ds")
+  .post(body)
+  .addHeader("token", "<api_token>")
+  .build();
+
+Response response = client.newCall(request).execute();
+```
+
+> Response
+
+```json
+[
+  {
+    "devices": {
+      "cpu6": [
+        "win-cpurec"
+      ],
+      "e1iexpress": [
+        "win-nicrec"
+      ],
+      "cpu2": [
+        "win-cpurec"
+      ],
+      "cpu1": [
+        "win-cpurec"
+      ],
+      "diskD": [
+        "win-diskrec"
+      ],
+      "cpu7": [
+        "win-cpurec"
+      ],
+      "cpu0": [
+        "win-cpurec"
+      ],
+      "system": [
+        "win-sysrec",
+        "win-hdwrec"
+      ],
+      "cpu4": [
+        "win-cpurec"
+      ],
+      "diskC": [
+        "win-diskrec"
+      ],
+      "cpu3": [
+        "win-cpurec"
+      ],
+      "cpu5": [
+        "win-cpurec"
+      ]
+    },
+    "id": "527debbd-c89b-5ea9-8052-ea8a4ae93cee",
+    "name": "ds-name1"
+  },
+  {
+    "devices": {
+      "dm-0": [
+        "linux-diskrec"
+      ],
+      "cpu2": [
+        "linux-cpurec"
+      ],
+      "eth0": [
+        "linux-nicrec"
+      ],
+      "cpu1": [
+        "linux-cpurec"
+      ],
+      "sda2": [
+        "linux-diskrec"
+      ],
+      "dm-1": [
+        "linux-diskrec"
+      ],
+      "cpu0": [
+        "linux-cpurec"
+      ],
+      "sda1": [
+        "linux-diskrec"
+      ],
+      "system": [
+        "linux-sysrec",
+        "linux-hdwrec"
+      ],
+      "sda5": [
+        "linux-diskrec"
+      ],
+      "sda": [
+        "linux-diskrec"
+      ],
+      "cpu3": [
+        "linux-cpurec"
+      ]
+    },
+    "id": "566ac121-59c7-509d-92e0-028b3c8d6154",
+    "name": "other-ds"
+  }
+]
+```
+
+### Request
+
+`http://<kronometrix_url>/api/get_ds`
+
+Parameter | Details
+--------- | -------
+sid | Subscription ID for which to query for datasources
+
+### Response
+
+A JSON-encoded array, each element of the array corresponding to a datasource and having these fields:
+
+Field | Details
+----- | -------
+id | The ID of the datasource
+name | The name of the datasource
+devices | A hash-table of devices available for each datasource; each element contains the name of the device as key and an array of message IDs as the value of the hash
