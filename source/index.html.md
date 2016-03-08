@@ -254,7 +254,8 @@ Response response = client.newCall(request).execute();
       ]
     },
     "id": "527debbd-c89b-5ea9-8052-ea8a4ae93cee",
-    "name": "ds-name1"
+    "name": "ds-name1",
+    "monitoring_object": "cpd"
   },
   {
     "devices": {
@@ -297,7 +298,8 @@ Response response = client.newCall(request).execute();
       ]
     },
     "id": "566ac121-59c7-509d-92e0-028b3c8d6154",
-    "name": "other-ds"
+    "name": "other-ds",
+    "monitoring_object": "cpd"
   }
 ]
 ```
@@ -318,4 +320,29 @@ Field | Details
 ----- | -------
 id | The ID of the datasource
 name | The name of the datasource
+monitoring_object | The ID of the monitoring object
 devices | A hash-table of devices available for each datasource; each element contains the name of the device as key and an array of message IDs as the value of the hash
+
+## List available statistics
+
+This endpoint lists the available statistics with intervals for a certain message. The message ID is the one listed for each device of the datasource.
+
+### Request
+
+`http://<kronometrix_url>/api/get_stats`
+
+Parameter | Details
+--------- | -------
+message | The message ID for which to obtain the available statistics and intervals
+
+### Response
+
+A JSON-encoded hash table with these fields:
+
+Field | Details
+----- | -------
+monitoring_object | The ID of the monitoring object
+message | The message ID (same with the "message" parameter sent)
+stats | An array of objects, each object (hash-table) having the fields "name" representing the parameter name and the field "functions" containing an array of functions (hash table). Each element of the "functions" hash has the aggregation function as key ("MIN", "MAX", "SUM", "COUNT", "LAST", "PERCENTILE") and an array of intervals as value. Each interval is an array of 2 elements, first element representing the interval width in seconds, and the second element representing the resolution in seconds.
+
+
