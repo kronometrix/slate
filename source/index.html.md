@@ -503,6 +503,92 @@ Field | Details
 ----- | -------
 removed | The ID of the subscription that has been deleted
 
+## Rename subscription
+
+> Request
+
+```shell
+curl -X POST -H "Token: <api_token>" -d '{
+    "params": {
+        "sid": "4be4d9aef4ed832301e331c30ab88e5d",
+        "name": "Another name",
+        "description": "Edited description"
+    }
+}' "http://<kronomentrix_url>/api/rename_subscription"
+```
+
+```php
+<?php
+
+$request = new HttpRequest();
+$request->setUrl('http://<kronomentrix_url>/api/rename_subscription');
+$request->setMethod(HTTP_METH_POST);
+
+$request->setHeaders(array(
+  'token' => '<api_token>'
+));
+
+$request->setBody('{
+    "params": {
+        "sid": "4be4d9aef4ed832301e331c30ab88e5d",
+        "name": "Another name",
+        "description": "Edited description"
+    }
+}');
+
+try {
+  $response = $request->send();
+
+  echo $response->getBody();
+} catch (HttpException $ex) {
+  echo $ex;
+}
+```
+
+```java
+OkHttpClient client = new OkHttpClient();
+
+MediaType mediaType = MediaType.parse("application/octet-stream");
+RequestBody body = RequestBody.create(mediaType, "{\n    \"params\": {\n        \"sid\": \"4be4d9aef4ed832301e331c30ab88e5d\",\n        \"name\": \"Another name\",\n        \"description\": \"Edited description\"\n    }\n}");
+Request request = new Request.Builder()
+  .url("http://<kronomentrix_url>/api/rename_subscription")
+  .post(body)
+  .addHeader("token", "<api_token>")
+  .build();
+
+Response response = client.newCall(request).execute();
+```
+
+> Response
+
+```json
+{
+  "renamed": "4be4d9aef4ed832301e331c30ab88e5d"
+}
+```
+
+This endpoint provides the user with the possibility to change the name of the subscription, or its description.
+
+### Request
+
+### Request
+
+`http://<kronometrix_url>/api/rename_subscription`
+
+Parameter | Details
+--------- | -------
+sid | Subscription ID to be renamed
+name | The new name of the subscription
+description | The new description of the subscription (optional)
+
+### Response
+
+The ID of the subscription that has been renamed
+
+Field | Details
+----- | -------
+renamed | The ID of the subscription that has been renamed
+
 ## List datasources
 
 This endpoint retreives the list of datasources which correspond to a subscription and which can be accessed by the user.
