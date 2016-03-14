@@ -27,9 +27,8 @@ The Kronometrix API can be accessed over HTTP, using standard POST requests.
 
 ```http
 POST /api/get_subscriptions HTTP/1.1
-Host: <host_ip>
-Token: invalid_token
-Content-Type: multipart/form-data; boundary=----WebKitFormBoundary7MA4YWxkTrZu0gW
+Host: 192.168.2.56
+Token: 8c24562ce3ae7812ef709934b7858b03
 ```
 
 > Response:
@@ -42,11 +41,12 @@ Content-Type: multipart/form-data; boundary=----WebKitFormBoundary7MA4YWxkTrZu0g
 }
 ```
 
-To access the API you will have to use one of the two authentication methods: 
-- using an *API Token* 
-- using basic authentication
+To access the API you will have to use one of the two authentication methods:
+ 
+* using an *API Token* 
+* using basic authentication
 
-The response from the server will be `200 OK` in case of success, or an http error code in case of failure. The body of the response will contain the text "OK" in case of success, or a description of the error in case of error (in JSON format)
+The response from the server will be `200 OK` in case of success, or an http error code in case of failure. The body of the response will consist of a string with JSON-encoded data, with various fields in case of succes, or a description of the error in case of failure.
 
 # Authentication
 
@@ -59,6 +59,14 @@ To authentication with the Kronometrix server using the API you can use one of t
 
 ### Using an API Token
 
+> API Token authentication
+
+```http
+POST /api/get_subscriptions HTTP/1.1
+Host: 192.168.2.56
+Token: 8c24562ce3ae7812ef709934b7858b03
+```
+
 The recommended authentication method is the one using an API Token. This method is more secure and also offers better performance.
 
 This method consists of using an API Token with every HTTP request you make to the API. The token must be present in the API request's **header** under the field name "Token":
@@ -69,7 +77,15 @@ The API Token can be obtained by logging in Kronometrix and accessing the sectio
 
 ### Using basic authentication
 
-The second authentication method is the one based on "basic authentication". Using this method, you can use your username and password directly to make API requests. This method is less secure because it sends authentication information in plain text. Also, it is less performant server-side.
+> Basic authentication
+
+```http
+POST /api/get_subscriptions HTTP/1.1
+Host: 192.168.2.56
+Authorization: Basic dXNlcm5hbWU6cGFzc3dvcmQ=
+```
+
+The second authentication method is the one using "basic authentication". With this method, you can use your username and password directly to make API requests. This method is less secure because it sends authentication information in plain text. Also, it is less performant server-side.
 
 All examples below will use API Token authentication, but basic authentication can also be used.
 
