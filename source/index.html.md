@@ -571,8 +571,6 @@ This endpoint provides the user with the possibility to change the name of the s
 
 ### Request
 
-### Request
-
 `http://<kronometrix_url>/api/rename_subscription`
 
 Parameter | Details
@@ -678,6 +676,187 @@ id | The ID of the datasource
 name | The name of the datasource
 monitoring_object | The ID of the monitoring object
 
+## Search datasources
+
+> Request
+
+```shell
+curl -X POST -H "Token: <api_token>" -d '{
+    "params": {
+        "sid": "9ee583c7d0a8b314c947dccfdcd922ca",
+        "search": "te"
+    }
+}' "http://<kronomentrix_url>/api/search_ds"
+```
+
+```php
+<?php
+
+$request = new HttpRequest();
+$request->setUrl('http://<kronomentrix_url>/api/search_ds');
+$request->setMethod(HTTP_METH_POST);
+
+$request->setHeaders(array(
+  'token' => '<api_token>'
+));
+
+$request->setBody('{
+    "params": {
+        "sid": "9ee583c7d0a8b314c947dccfdcd922ca",
+        "search": "te"
+    }
+}');
+
+try {
+  $response = $request->send();
+
+  echo $response->getBody();
+} catch (HttpException $ex) {
+  echo $ex;
+}
+```
+
+```java
+OkHttpClient client = new OkHttpClient();
+
+MediaType mediaType = MediaType.parse("application/octet-stream");
+RequestBody body = RequestBody.create(mediaType, "{\n    \"params\": {\n        \"sid\": \"9ee583c7d0a8b314c947dccfdcd922ca\",\n        \"search\": \"te\"\n    }\n}");
+Request request = new Request.Builder()
+  .url("http://<kronomentrix_url>/api/search_ds")
+  .post(body)
+  .addHeader("token", "<api_token>")
+  .build();
+
+Response response = client.newCall(request).execute();
+```
+
+> Response
+
+```json
+[
+  {
+    "id": "a1153f37-57f5-5046-b117-ac195faff39a",
+    "monitoring_object": "cpd",
+    "name": "tethys"
+  }
+]
+```
+
+This endpoint offers the users the possibility to search for a datasource in a subscription by datasource name or ID. The call will return a list of datasources that contain the search string in their name or ID.
+
+### Request
+
+`http://<kronometrix_url>/api/search_ds`
+
+Parameter | Details
+--------- | -------
+sid | Subscription ID in which to search for datasources
+search | The search term (part of the datasource's name or ID)
+
+### Response
+
+A JSON-encoded array, each element of the array corresponding to a datasource and having these fields:
+
+Field | Details
+----- | -------
+id | The ID of the datasource
+name | The name of the datasource
+monitoring_object | The ID of the monitoring object
+
+## Delete datasources
+
+> Request
+
+```shell
+curl -X POST -H "Token: <api_token>" -d '{
+    "params": {
+        "sid": "9ee583c7d0a8b314c947dccfdcd922ca",
+        "datasources": [
+            "b2fadd11-f143-529f-bd97-5f5e30b19499",
+            "527debbd-c89b-5ea9-8052-ea8a4ae93cee"
+        ]
+    }
+}' "http://<kronomentrix_url>/api/delete_ds"
+```
+
+```php
+<?php
+
+$request = new HttpRequest();
+$request->setUrl('http://<kronomentrix_url>/api/delete_ds');
+$request->setMethod(HTTP_METH_POST);
+
+$request->setHeaders(array(
+  'token' => '<api_token>'
+));
+
+$request->setBody('{
+    "params": {
+        "sid": "9ee583c7d0a8b314c947dccfdcd922ca",
+        "datasources": [
+            "b2fadd11-f143-529f-bd97-5f5e30b19499",
+            "527debbd-c89b-5ea9-8052-ea8a4ae93cee"
+        ]
+    }
+}');
+
+try {
+  $response = $request->send();
+
+  echo $response->getBody();
+} catch (HttpException $ex) {
+  echo $ex;
+}
+```
+
+```java
+OkHttpClient client = new OkHttpClient();
+
+MediaType mediaType = MediaType.parse("application/octet-stream");
+RequestBody body = RequestBody.create(mediaType, "{\n    \"params\": {\n        \"sid\": \"9ee583c7d0a8b314c947dccfdcd922ca\",\n        \"datasources\": [\n            \"b2fadd11-f143-529f-bd97-5f5e30b19499\",\n            \"527debbd-c89b-5ea9-8052-ea8a4ae93cee\"\n        ]\n    }\n}");
+Request request = new Request.Builder()
+  .url("http://<kronomentrix_url>/api/delete_ds")
+  .post(body)
+  .addHeader("token", "<api_token>")
+  .build();
+
+Response response = client.newCall(request).execute();
+```
+
+> Response
+
+```json
+{
+  "deleted": [
+    "b2fadd11-f143-529f-bd97-5f5e30b19499",
+    "527debbd-c89b-5ea9-8052-ea8a4ae93cee"
+  ]
+}
+```
+
+This endpoint allows the user to delete one or many datasources in a subscription. 
+
+<aside class="warning">
+Attention! This operation can't be reverted, so use with care!
+</aside>
+
+### Request
+
+`http://<kronometrix_url>/api/delete_ds`
+
+Parameter | Details
+--------- | -------
+sid | The ID of the subscription from which to delete the datasources
+datasources | An array of datasource IDs
+
+### Response
+
+The list of datasource IDs that have been deleted
+
+Field | Details
+----- | -------
+deleted | An array of datasource IDs that have been deleted
+
 ## List devices of a datasource
 
 > Request
@@ -777,7 +956,7 @@ dsid | The ID of the datasource
 
 ### Response
 
-A JSON-encoded hash table, with keys representing devices, and values consisting of arrays of messages.
+A JSON-encoded hash table, with each key representing a device ID, and the corresponding value consisting of an array of message names for that device.
 
 # Stats and values
 
@@ -842,12 +1021,20 @@ Response response = client.newCall(request).execute();
       "name": "cpupct",
       "functions": {
         "MAX": [ [300, 300 ], [10800, 60], [21600, 300], [43200, 900], [86400, 1800], [259200, 3600], [604800, 10800], [2592000, 43200], [7776000, 86400 ] ],
-        "SUM": [ ... ],
-        "COUNT": [ ... ],
-        "MIN": [ ... ]
+        "SUM": [ [10800, 60], [21600, 300], [43200, 900], [86400, 1800], [259200, 3600], [604800, 10800], [2592000, 43200], [7776000, 86400 ] ],
+        "COUNT": [ [10800, 60], [21600, 300], [43200, 900], [86400, 1800], [259200, 3600], [604800, 10800], [2592000, 43200], [7776000, 86400 ] ],
+        "MIN": [ [300, 300 ], [10800, 60], [21600, 300], [43200, 900], [86400, 1800], [259200, 3600], [604800, 10800], [2592000, 43200], [7776000, 86400 ] ]
       }
     },
-    ...
+    {
+      "name": "memusedpct",
+      "functions": {
+        "MAX": [ [300, 300 ], [10800, 60], [21600, 300], [43200, 900], [86400, 1800], [259200, 3600], [604800, 10800], [2592000, 43200], [7776000, 86400 ] ],
+        "SUM": [ [10800, 60], [21600, 300], [43200, 900], [86400, 1800], [259200, 3600], [604800, 10800], [2592000, 43200], [7776000, 86400 ] ],
+        "COUNT": [ [10800, 60], [21600, 300], [43200, 900], [86400, 1800], [259200, 3600], [604800, 10800], [2592000, 43200], [7776000, 86400 ] ],
+        "MIN": [ [300, 300 ], [10800, 60], [21600, 300], [43200, 900], [86400, 1800], [259200, 3600], [604800, 10800], [2592000, 43200], [7776000, 86400 ] ]
+      }
+    }
   ]
 }
 ```
@@ -870,7 +1057,7 @@ Field | Details
 ----- | -------
 monitoring_object | The ID of the monitoring object
 message | The message ID (same with the "message" parameter sent)
-stats | An array of objects, each object (hash-table) having the fields "name" representing the parameter name and the field "functions" containing an array of functions (hash table). Each element of the "functions" hash has the aggregation function as key ("MIN", "MAX", "SUM", "COUNT", "LAST", "PERCENTILE") and an array of intervals as value. Each interval is an array of 2 elements, first element representing the interval width in seconds, and the second element representing the resolution in seconds.
+stats | An array of objects, each object (hash-table) having these fields: "name" = parameter name; "functions" = an array of functions (hash table).<br/>Each element of the "functions" hash has the aggregation function as key ("MIN", "MAX", "SUM", "COUNT", "LAST", "PERCENTILE") and an array of intervals as value.<br/>Each interval is an array of 2 elements, first element representing the interval width in seconds, and the second element representing the resolution in seconds.
 
 ## Get statistical data
 
