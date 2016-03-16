@@ -958,7 +958,7 @@ dsid | The ID of the datasource
 
 A JSON-encoded hash table, with each key representing a device ID, and the corresponding value consisting of an array of message names for that device.
 
-# Stats and values
+# Summary statistics
 
 ## List available statistics
 
