@@ -1471,6 +1471,238 @@ Attention! This operation can&rsquo;t be reverted, so use with care!
 
 <p>A JSON-encoded array, each element of the array being an array of 2 elements, the first element representing <strong>the unix timestamp in milliseconds</strong> (multiplied by 1000), and the second element representing the value of the parameter for that timestamp. The second value may be <em>null</em>, which means that there is not an available value for that timestamp.</p>
 
+<h1 id="raw-data">Raw data</h1>
+
+<h2 id="list-raw-data-files">List raw data files</h2>
+
+<blockquote>
+<p>Request</p>
+</blockquote>
+<pre class="highlight shell"><code>curl -X POST -H <span class="s2">"Token: &lt;api_token&gt;"</span> -d <span class="s1">'{
+    "params": {
+        "sid": "9ee583c7d0a8b314c947dccfdcd922ca",
+        "dsid": "527debbd-c89b-5ea9-8052-ea8a4ae93cee",
+        "date": "2016-03-16"
+    }
+}'</span> <span class="s2">"http://&lt;kronomentrix_url&gt;/api/list_raw_data_files"</span>
+</code></pre>
+<pre class="highlight php"><code><span class="cp">&lt;?php</span>
+
+<span class="nv">$request</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">HttpRequest</span><span class="p">();</span>
+<span class="nv">$request</span><span class="o">-&gt;</span><span class="na">setUrl</span><span class="p">(</span><span class="s1">'http://&lt;kronomentrix_url&gt;/api/list_raw_data_files'</span><span class="p">);</span>
+<span class="nv">$request</span><span class="o">-&gt;</span><span class="na">setMethod</span><span class="p">(</span><span class="nx">HTTP_METH_POST</span><span class="p">);</span>
+
+<span class="nv">$request</span><span class="o">-&gt;</span><span class="na">setHeaders</span><span class="p">(</span><span class="k">array</span><span class="p">(</span>
+  <span class="s1">'token'</span> <span class="o">=&gt;</span> <span class="s1">'&lt;api_token&gt;'</span>
+<span class="p">));</span>
+
+<span class="nv">$request</span><span class="o">-&gt;</span><span class="na">setBody</span><span class="p">(</span><span class="s1">'{
+    "params": {
+        "sid": "9ee583c7d0a8b314c947dccfdcd922ca",
+        "dsid": "527debbd-c89b-5ea9-8052-ea8a4ae93cee",
+        "date": "2016-03-16"
+    }
+}'</span><span class="p">);</span>
+
+<span class="k">try</span> <span class="p">{</span>
+  <span class="nv">$response</span> <span class="o">=</span> <span class="nv">$request</span><span class="o">-&gt;</span><span class="na">send</span><span class="p">();</span>
+
+  <span class="k">echo</span> <span class="nv">$response</span><span class="o">-&gt;</span><span class="na">getBody</span><span class="p">();</span>
+<span class="p">}</span> <span class="k">catch</span> <span class="p">(</span><span class="nx">HttpException</span> <span class="nv">$ex</span><span class="p">)</span> <span class="p">{</span>
+  <span class="k">echo</span> <span class="nv">$ex</span><span class="p">;</span>
+<span class="p">}</span>
+</code></pre>
+<pre class="highlight java"><code><span class="n">OkHttpClient</span> <span class="n">client</span> <span class="o">=</span> <span class="k">new</span> <span class="n">OkHttpClient</span><span class="o">();</span>
+
+<span class="n">MediaType</span> <span class="n">mediaType</span> <span class="o">=</span> <span class="n">MediaType</span><span class="o">.</span><span class="na">parse</span><span class="o">(</span><span class="s">"application/octet-stream"</span><span class="o">);</span>
+<span class="n">RequestBody</span> <span class="n">body</span> <span class="o">=</span> <span class="n">RequestBody</span><span class="o">.</span><span class="na">create</span><span class="o">(</span><span class="n">mediaType</span><span class="o">,</span> <span class="s">"{\n    \"params\": {\n        \"sid\": \"9ee583c7d0a8b314c947dccfdcd922ca\",\n        \"dsid\": \"527debbd-c89b-5ea9-8052-ea8a4ae93cee\",\n        \"date\": \"2016-03-16\"\n    }\n}"</span><span class="o">);</span>
+<span class="n">Request</span> <span class="n">request</span> <span class="o">=</span> <span class="k">new</span> <span class="n">Request</span><span class="o">.</span><span class="na">Builder</span><span class="o">()</span>
+  <span class="o">.</span><span class="na">url</span><span class="o">(</span><span class="s">"http://&lt;kronomentrix_url&gt;/api/list_raw_data_files"</span><span class="o">)</span>
+  <span class="o">.</span><span class="na">post</span><span class="o">(</span><span class="n">body</span><span class="o">)</span>
+  <span class="o">.</span><span class="na">addHeader</span><span class="o">(</span><span class="s">"token"</span><span class="o">,</span> <span class="s">"&lt;api_token&gt;"</span><span class="o">)</span>
+  <span class="o">.</span><span class="na">build</span><span class="o">();</span>
+
+<span class="n">Response</span> <span class="n">response</span> <span class="o">=</span> <span class="n">client</span><span class="o">.</span><span class="na">newCall</span><span class="o">(</span><span class="n">request</span><span class="o">).</span><span class="na">execute</span><span class="o">();</span>
+</code></pre>
+
+<blockquote>
+<p>Response</p>
+</blockquote>
+<pre class="highlight json"><code><span class="p">[</span><span class="w">
+  </span><span class="p">{</span><span class="w">
+    </span><span class="nt">"file"</span><span class="p">:</span><span class="w"> </span><span class="s2">"nicrec.e1iexpress.2016-03-16.krd"</span><span class="p">,</span><span class="w">
+    </span><span class="nt">"size"</span><span class="p">:</span><span class="w"> </span><span class="s2">"94 KB"</span><span class="w">
+  </span><span class="p">},</span><span class="w">
+  </span><span class="p">{</span><span class="w">
+    </span><span class="nt">"file"</span><span class="p">:</span><span class="w"> </span><span class="s2">"cpurec.cpu2.2016-03-16.krd"</span><span class="p">,</span><span class="w">
+    </span><span class="nt">"size"</span><span class="p">:</span><span class="w"> </span><span class="s2">"59 KB"</span><span class="w">
+  </span><span class="p">},</span><span class="w">
+  </span><span class="p">{</span><span class="w">
+    </span><span class="nt">"file"</span><span class="p">:</span><span class="w"> </span><span class="s2">"cpurec.cpu5.2016-03-16.krd"</span><span class="p">,</span><span class="w">
+    </span><span class="nt">"size"</span><span class="p">:</span><span class="w"> </span><span class="s2">"59 KB"</span><span class="w">
+  </span><span class="p">},</span><span class="w">
+  </span><span class="p">{</span><span class="w">
+    </span><span class="nt">"file"</span><span class="p">:</span><span class="w"> </span><span class="s2">"hdwrec.system.2016-03-16.krd"</span><span class="p">,</span><span class="w">
+    </span><span class="nt">"size"</span><span class="p">:</span><span class="w"> </span><span class="s2">"126 KB"</span><span class="w">
+  </span><span class="p">},</span><span class="w">
+  </span><span class="p">{</span><span class="w">
+    </span><span class="nt">"file"</span><span class="p">:</span><span class="w"> </span><span class="s2">"cpurec.cpu7.2016-03-16.krd"</span><span class="p">,</span><span class="w">
+    </span><span class="nt">"size"</span><span class="p">:</span><span class="w"> </span><span class="s2">"59 KB"</span><span class="w">
+  </span><span class="p">},</span><span class="w">
+  </span><span class="p">{</span><span class="w">
+    </span><span class="nt">"file"</span><span class="p">:</span><span class="w"> </span><span class="s2">"cpurec.cpu0.2016-03-16.krd"</span><span class="p">,</span><span class="w">
+    </span><span class="nt">"size"</span><span class="p">:</span><span class="w"> </span><span class="s2">"59 KB"</span><span class="w">
+  </span><span class="p">},</span><span class="w">
+  </span><span class="p">{</span><span class="w">
+    </span><span class="nt">"file"</span><span class="p">:</span><span class="w"> </span><span class="s2">"cpurec.cpu6.2016-03-16.krd"</span><span class="p">,</span><span class="w">
+    </span><span class="nt">"size"</span><span class="p">:</span><span class="w"> </span><span class="s2">"59 KB"</span><span class="w">
+  </span><span class="p">},</span><span class="w">
+  </span><span class="p">{</span><span class="w">
+    </span><span class="nt">"file"</span><span class="p">:</span><span class="w"> </span><span class="s2">"diskrec.diskC.2016-03-16.krd"</span><span class="p">,</span><span class="w">
+    </span><span class="nt">"size"</span><span class="p">:</span><span class="w"> </span><span class="s2">"124 KB"</span><span class="w">
+  </span><span class="p">},</span><span class="w">
+  </span><span class="p">{</span><span class="w">
+    </span><span class="nt">"file"</span><span class="p">:</span><span class="w"> </span><span class="s2">"diskrec.diskD.2016-03-16.krd"</span><span class="p">,</span><span class="w">
+    </span><span class="nt">"size"</span><span class="p">:</span><span class="w"> </span><span class="s2">"116 KB"</span><span class="w">
+  </span><span class="p">},</span><span class="w">
+  </span><span class="p">{</span><span class="w">
+    </span><span class="nt">"file"</span><span class="p">:</span><span class="w"> </span><span class="s2">"cpurec.cpu1.2016-03-16.krd"</span><span class="p">,</span><span class="w">
+    </span><span class="nt">"size"</span><span class="p">:</span><span class="w"> </span><span class="s2">"59 KB"</span><span class="w">
+  </span><span class="p">},</span><span class="w">
+  </span><span class="p">{</span><span class="w">
+    </span><span class="nt">"file"</span><span class="p">:</span><span class="w"> </span><span class="s2">"cpurec.cpu3.2016-03-16.krd"</span><span class="p">,</span><span class="w">
+    </span><span class="nt">"size"</span><span class="p">:</span><span class="w"> </span><span class="s2">"59 KB"</span><span class="w">
+  </span><span class="p">},</span><span class="w">
+  </span><span class="p">{</span><span class="w">
+    </span><span class="nt">"file"</span><span class="p">:</span><span class="w"> </span><span class="s2">"cpurec.cpu4.2016-03-16.krd"</span><span class="p">,</span><span class="w">
+    </span><span class="nt">"size"</span><span class="p">:</span><span class="w"> </span><span class="s2">"59 KB"</span><span class="w">
+  </span><span class="p">},</span><span class="w">
+  </span><span class="p">{</span><span class="w">
+    </span><span class="nt">"file"</span><span class="p">:</span><span class="w"> </span><span class="s2">"sysrec.system.2016-03-16.krd"</span><span class="p">,</span><span class="w">
+    </span><span class="nt">"size"</span><span class="p">:</span><span class="w"> </span><span class="s2">"263 KB"</span><span class="w">
+  </span><span class="p">}</span><span class="w">
+</span><span class="p">]</span><span class="w">
+</span></code></pre>
+
+<p>This endpoint lists the available raw data files for a certain date (day). Please note that the date is in <code class="prettyprint">yyyy-mm-dd</code> format!</p>
+
+<h3 id="request">Request</h3>
+
+<p><code class="prettyprint">http://&lt;kronometrix_url&gt;/api/list_raw_data_files</code></p>
+
+<table><thead>
+<tr>
+<th>Parameter</th>
+<th>Details</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>sid</td>
+<td>Subscription ID</td>
+</tr>
+<tr>
+<td>dsid</td>
+<td>Datasource ID</td>
+</tr>
+<tr>
+<td>date</td>
+<td>The date for which to list files</td>
+</tr>
+</tbody></table>
+
+<h3 id="response">Response</h3>
+
+<p>A JSON-encoded array, each element of the array being a hash table with two elements: <em>file</em> = the file name; <em>size</em> = the file size. </p>
+
+<h2 id="download-raw-data-file">Download raw data file</h2>
+<pre class="highlight shell"><code>curl -X POST -H <span class="s2">"Token: &lt;api_token&gt;"</span> -d <span class="s1">'{
+    "params": {
+        "sid": "9ee583c7d0a8b314c947dccfdcd922ca",
+        "dsid": "527debbd-c89b-5ea9-8052-ea8a4ae93cee",
+        "file": "sysrec.system.2016-03-16.krd"
+    }
+}'</span> <span class="s2">"http://&lt;kronometrix_url&gt;/api/get_raw_data_file"</span>
+</code></pre>
+<pre class="highlight php"><code><span class="cp">&lt;?php</span>
+
+<span class="nv">$request</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">HttpRequest</span><span class="p">();</span>
+<span class="nv">$request</span><span class="o">-&gt;</span><span class="na">setUrl</span><span class="p">(</span><span class="s1">'http://&lt;kronomentrix_url&gt;/api/get_raw_data_file'</span><span class="p">);</span>
+<span class="nv">$request</span><span class="o">-&gt;</span><span class="na">setMethod</span><span class="p">(</span><span class="nx">HTTP_METH_POST</span><span class="p">);</span>
+
+<span class="nv">$request</span><span class="o">-&gt;</span><span class="na">setHeaders</span><span class="p">(</span><span class="k">array</span><span class="p">(</span>
+  <span class="s1">'token'</span> <span class="o">=&gt;</span> <span class="s1">'&lt;api_token&gt;'</span>
+<span class="p">));</span>
+
+<span class="nv">$request</span><span class="o">-&gt;</span><span class="na">setBody</span><span class="p">(</span><span class="s1">'{
+    "params": {
+        "sid": "9ee583c7d0a8b314c947dccfdcd922ca",
+        "dsid": "527debbd-c89b-5ea9-8052-ea8a4ae93cee",
+        "file": "sysrec.system.2016-03-16.krd"
+    }
+}'</span><span class="p">);</span>
+
+<span class="k">try</span> <span class="p">{</span>
+  <span class="nv">$response</span> <span class="o">=</span> <span class="nv">$request</span><span class="o">-&gt;</span><span class="na">send</span><span class="p">();</span>
+
+  <span class="k">echo</span> <span class="nv">$response</span><span class="o">-&gt;</span><span class="na">getBody</span><span class="p">();</span>
+<span class="p">}</span> <span class="k">catch</span> <span class="p">(</span><span class="nx">HttpException</span> <span class="nv">$ex</span><span class="p">)</span> <span class="p">{</span>
+  <span class="k">echo</span> <span class="nv">$ex</span><span class="p">;</span>
+<span class="p">}</span>
+</code></pre>
+<pre class="highlight java"><code><span class="n">OkHttpClient</span> <span class="n">client</span> <span class="o">=</span> <span class="k">new</span> <span class="n">OkHttpClient</span><span class="o">();</span>
+
+<span class="n">MediaType</span> <span class="n">mediaType</span> <span class="o">=</span> <span class="n">MediaType</span><span class="o">.</span><span class="na">parse</span><span class="o">(</span><span class="s">"application/octet-stream"</span><span class="o">);</span>
+<span class="n">RequestBody</span> <span class="n">body</span> <span class="o">=</span> <span class="n">RequestBody</span><span class="o">.</span><span class="na">create</span><span class="o">(</span><span class="n">mediaType</span><span class="o">,</span> <span class="s">"{\n    \"params\": {\n        \"sid\": \"9ee583c7d0a8b314c947dccfdcd922ca\",\n        \"dsid\": \"527debbd-c89b-5ea9-8052-ea8a4ae93cee\",\n        \"file\": \"sysrec.system.2016-03-16.krd\"\n    }\n}"</span><span class="o">);</span>
+<span class="n">Request</span> <span class="n">request</span> <span class="o">=</span> <span class="k">new</span> <span class="n">Request</span><span class="o">.</span><span class="na">Builder</span><span class="o">()</span>
+  <span class="o">.</span><span class="na">url</span><span class="o">(</span><span class="s">"http://&lt;kronomentrix_url&gt;/api/get_raw_data_file"</span><span class="o">)</span>
+  <span class="o">.</span><span class="na">post</span><span class="o">(</span><span class="n">body</span><span class="o">)</span>
+  <span class="o">.</span><span class="na">addHeader</span><span class="o">(</span><span class="s">"token"</span><span class="o">,</span> <span class="s">"&lt;api_token&gt;"</span><span class="o">)</span>
+  <span class="o">.</span><span class="na">build</span><span class="o">();</span>
+
+<span class="n">Response</span> <span class="n">response</span> <span class="o">=</span> <span class="n">client</span><span class="o">.</span><span class="na">newCall</span><span class="o">(</span><span class="n">request</span><span class="o">).</span><span class="na">execute</span><span class="o">();</span>
+</code></pre>
+
+<blockquote>
+<p>Response</p>
+</blockquote>
+<pre class="highlight plaintext"><code>1458086400:0.58:0.00:0.00:0.30:0.28:98.63:0.01:0.00:74:1342:41.54:6834524:9619968:16454492:58.46:0.73:18064:2472304:2490368:0:5.41:0:11:188.44:0:0:0:11:193.85:11:2.89:0:0:7:0.80:0:0:18:3.69
+1458086460:0.43:0.00:0.00:0.24:0.19:98.84:0.00:0.00:74:1339:41.52:6832560:9621932:16454492:58.48:0.73:18064:2472304:2490368:0:0.00:0:10:169.21:0:0:0:10:169.21:9:1.27:0:0:6:0.64:0:0:15:1.91
+1458086520:0.43:0.00:0.00:0.27:0.15:98.77:0.00:0.00:74:1325:41.49:6827092:9627400:16454492:58.51:0.73:18064:2472304:2490368:0:1.34:0:10:143.63:0:0:0:10:144.97:10:2.30:0:0:6:0.67:0:0:17:2.97
+1458086580:0.42:0.00:0.00:0.24:0.19:98.78:0.01:0.00:75:1317:41.49:6826668:9627824:16454492:58.51:0.73:18064:2472304:2490368:1:17.34:0:13:180.12:0:0:0:14:197.46:9:1.23:0:0:6:0.63:0:0:15:1.86
+1458086642:0.78:0.00:0.00:0.33:0.46:98.41:0.02:0.00:74:1321:41.60:6845692:9608800:16454492:58.40:0.73:18064:2472304:2490368:0:0.26:0:20:662.37:0:0:0:20:662.63:10:2.35:0:0:7:0.72:0:0:18:3.07
+...
+</code></pre>
+
+<p>This endpint allows users to download a raw data file.</p>
+
+<h3 id="request">Request</h3>
+
+<p><code class="prettyprint">http://&lt;kronometrix_url&gt;/api/get_raw_data_file</code></p>
+
+<table><thead>
+<tr>
+<th>Parameter</th>
+<th>Details</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>sid</td>
+<td>Subscription ID</td>
+</tr>
+<tr>
+<td>dsid</td>
+<td>Datasource ID</td>
+</tr>
+<tr>
+<td>file</td>
+<td>File name to download</td>
+</tr>
+</tbody></table>
+
+<h3 id="response">Response</h3>
+
+<p>The file content</p>
+
       </div>
       <div class="dark-box">
           <div class="lang-selector">
