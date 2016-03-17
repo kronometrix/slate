@@ -1169,3 +1169,217 @@ resolution | Resolution
 ### Response
 
 A JSON-encoded array, each element of the array being an array of 2 elements, the first element representing **the unix timestamp in milliseconds** (multiplied by 1000), and the second element representing the value of the parameter for that timestamp. The second value may be *null*, which means that there is not an available value for that timestamp.
+
+# Raw data
+
+## List raw data files
+
+> Request
+
+```shell
+curl -X POST -H "Token: <api_token>" -d '{
+    "params": {
+        "sid": "9ee583c7d0a8b314c947dccfdcd922ca",
+        "dsid": "527debbd-c89b-5ea9-8052-ea8a4ae93cee",
+        "date": "2016-03-16"
+    }
+}' "http://<kronomentrix_url>/api/list_raw_data_files"
+```
+
+```php
+<?php
+
+$request = new HttpRequest();
+$request->setUrl('http://<kronomentrix_url>/api/list_raw_data_files');
+$request->setMethod(HTTP_METH_POST);
+
+$request->setHeaders(array(
+  'token' => '<api_token>'
+));
+
+$request->setBody('{
+    "params": {
+        "sid": "9ee583c7d0a8b314c947dccfdcd922ca",
+        "dsid": "527debbd-c89b-5ea9-8052-ea8a4ae93cee",
+        "date": "2016-03-16"
+    }
+}');
+
+try {
+  $response = $request->send();
+
+  echo $response->getBody();
+} catch (HttpException $ex) {
+  echo $ex;
+}
+```
+
+```java
+OkHttpClient client = new OkHttpClient();
+
+MediaType mediaType = MediaType.parse("application/octet-stream");
+RequestBody body = RequestBody.create(mediaType, "{\n    \"params\": {\n        \"sid\": \"9ee583c7d0a8b314c947dccfdcd922ca\",\n        \"dsid\": \"527debbd-c89b-5ea9-8052-ea8a4ae93cee\",\n        \"date\": \"2016-03-16\"\n    }\n}");
+Request request = new Request.Builder()
+  .url("http://<kronomentrix_url>/api/list_raw_data_files")
+  .post(body)
+  .addHeader("token", "<api_token>")
+  .build();
+
+Response response = client.newCall(request).execute();
+```
+
+> Response
+
+```json
+[
+  {
+    "file": "nicrec.e1iexpress.2016-03-16.krd",
+    "size": "94 KB"
+  },
+  {
+    "file": "cpurec.cpu2.2016-03-16.krd",
+    "size": "59 KB"
+  },
+  {
+    "file": "cpurec.cpu5.2016-03-16.krd",
+    "size": "59 KB"
+  },
+  {
+    "file": "hdwrec.system.2016-03-16.krd",
+    "size": "126 KB"
+  },
+  {
+    "file": "cpurec.cpu7.2016-03-16.krd",
+    "size": "59 KB"
+  },
+  {
+    "file": "cpurec.cpu0.2016-03-16.krd",
+    "size": "59 KB"
+  },
+  {
+    "file": "cpurec.cpu6.2016-03-16.krd",
+    "size": "59 KB"
+  },
+  {
+    "file": "diskrec.diskC.2016-03-16.krd",
+    "size": "124 KB"
+  },
+  {
+    "file": "diskrec.diskD.2016-03-16.krd",
+    "size": "116 KB"
+  },
+  {
+    "file": "cpurec.cpu1.2016-03-16.krd",
+    "size": "59 KB"
+  },
+  {
+    "file": "cpurec.cpu3.2016-03-16.krd",
+    "size": "59 KB"
+  },
+  {
+    "file": "cpurec.cpu4.2016-03-16.krd",
+    "size": "59 KB"
+  },
+  {
+    "file": "sysrec.system.2016-03-16.krd",
+    "size": "263 KB"
+  }
+]
+```
+
+This endpoint lists the available raw data files for a certain date (day). Please note that the date is in `yyyy-mm-dd` format!
+
+### Request
+
+`http://<kronometrix_url>/api/list_raw_data_files`
+
+Parameter | Details
+--------- | -------
+sid | Subscription ID
+dsid | Datasource ID
+date | The date for which to list files
+
+### Response
+
+A JSON-encoded array, each element of the array being a hash table with two elements: *file* = the file name; *size* = the file size. 
+
+## Download raw data file
+
+```shell
+curl -X POST -H "Token: <api_token>" -d '{
+    "params": {
+        "sid": "9ee583c7d0a8b314c947dccfdcd922ca",
+        "dsid": "527debbd-c89b-5ea9-8052-ea8a4ae93cee",
+        "file": "sysrec.system.2016-03-16.krd"
+    }
+}' "http://<kronometrix_url>/api/get_raw_data_file"
+```
+
+```php
+<?php
+
+$request = new HttpRequest();
+$request->setUrl('http://<kronomentrix_url>/api/get_raw_data_file');
+$request->setMethod(HTTP_METH_POST);
+
+$request->setHeaders(array(
+  'token' => '<api_token>'
+));
+
+$request->setBody('{
+    "params": {
+        "sid": "9ee583c7d0a8b314c947dccfdcd922ca",
+        "dsid": "527debbd-c89b-5ea9-8052-ea8a4ae93cee",
+        "file": "sysrec.system.2016-03-16.krd"
+    }
+}');
+
+try {
+  $response = $request->send();
+
+  echo $response->getBody();
+} catch (HttpException $ex) {
+  echo $ex;
+}
+```
+
+```java
+OkHttpClient client = new OkHttpClient();
+
+MediaType mediaType = MediaType.parse("application/octet-stream");
+RequestBody body = RequestBody.create(mediaType, "{\n    \"params\": {\n        \"sid\": \"9ee583c7d0a8b314c947dccfdcd922ca\",\n        \"dsid\": \"527debbd-c89b-5ea9-8052-ea8a4ae93cee\",\n        \"file\": \"sysrec.system.2016-03-16.krd\"\n    }\n}");
+Request request = new Request.Builder()
+  .url("http://<kronomentrix_url>/api/get_raw_data_file")
+  .post(body)
+  .addHeader("token", "<api_token>")
+  .build();
+
+Response response = client.newCall(request).execute();
+```
+
+> Response
+
+```plaintext
+1458086400:0.58:0.00:0.00:0.30:0.28:98.63:0.01:0.00:74:1342:41.54:6834524:9619968:16454492:58.46:0.73:18064:2472304:2490368:0:5.41:0:11:188.44:0:0:0:11:193.85:11:2.89:0:0:7:0.80:0:0:18:3.69
+1458086460:0.43:0.00:0.00:0.24:0.19:98.84:0.00:0.00:74:1339:41.52:6832560:9621932:16454492:58.48:0.73:18064:2472304:2490368:0:0.00:0:10:169.21:0:0:0:10:169.21:9:1.27:0:0:6:0.64:0:0:15:1.91
+1458086520:0.43:0.00:0.00:0.27:0.15:98.77:0.00:0.00:74:1325:41.49:6827092:9627400:16454492:58.51:0.73:18064:2472304:2490368:0:1.34:0:10:143.63:0:0:0:10:144.97:10:2.30:0:0:6:0.67:0:0:17:2.97
+1458086580:0.42:0.00:0.00:0.24:0.19:98.78:0.01:0.00:75:1317:41.49:6826668:9627824:16454492:58.51:0.73:18064:2472304:2490368:1:17.34:0:13:180.12:0:0:0:14:197.46:9:1.23:0:0:6:0.63:0:0:15:1.86
+1458086642:0.78:0.00:0.00:0.33:0.46:98.41:0.02:0.00:74:1321:41.60:6845692:9608800:16454492:58.40:0.73:18064:2472304:2490368:0:0.26:0:20:662.37:0:0:0:20:662.63:10:2.35:0:0:7:0.72:0:0:18:3.07
+...
+```
+
+This endpint allows users to download a raw data file.
+
+### Request
+
+`http://<kronometrix_url>/api/get_raw_data_file`
+
+Parameter | Details
+--------- | -------
+sid | Subscription ID
+dsid | Datasource ID
+file | File name to download
+
+### Response
+
+The file content
