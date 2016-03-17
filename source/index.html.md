@@ -958,6 +958,82 @@ dsid | The ID of the datasource
 
 A JSON-encoded hash table, with each key representing a device ID, and the corresponding value consisting of an array of message names for that device.
 
+## Send data
+
+> Request
+
+```shell
+curl -X POST -H "Token: <api_token>" -H "Content-Type: application/x-www-form-urlencoded" -d 'payload=win-sysrec:9ee583c7d0a8b314c947dccfdcd922ca:TEST:system:1458174060:0.17:0.00:0.00:0.09:0.09:99.61:0.01:0.00:49:790:34.20:5627684:10826808:16454492:65.80:0.00:0:2490368:2490368:0:0.00:0:9:146.42:0:0:0:9:146.42:8:1.23:0:0:5:0.59:0:0:14:1.82:48aae8722de9a0f1b50b906ee32c69f888ee7b2deaf42e3133ec6dbece4ba31b' "http://<kronomentrix_url>/api/private/send_data"
+```
+
+```php
+<?php
+
+$request = new HttpRequest();
+$request->setUrl('http://<kronomentrix_url>/api/private/send_data');
+$request->setMethod(HTTP_METH_POST);
+
+$request->setHeaders(array(
+  'content-type' => 'application/x-www-form-urlencoded',
+  'token' => '<api_token>'
+));
+
+$request->setContentType('application/x-www-form-urlencoded');
+$request->setPostFields(array(
+  'payload' => 'win-sysrec:9ee583c7d0a8b314c947dccfdcd922ca:TEST:system:1458174060:0.17:0.00:0.00:0.09:0.09:99.61:0.01:0.00:49:790:34.20:5627684:10826808:16454492:65.80:0.00:0:2490368:2490368:0:0.00:0:9:146.42:0:0:0:9:146.42:8:1.23:0:0:5:0.59:0:0:14:1.82:48aae8722de9a0f1b50b906ee32c69f888ee7b2deaf42e3133ec6dbece4ba31b'
+));
+
+try {
+  $response = $request->send();
+
+  echo $response->getBody();
+} catch (HttpException $ex) {
+  echo $ex;
+}
+```
+
+```java
+OkHttpClient client = new OkHttpClient();
+
+MediaType mediaType = MediaType.parse("application/x-www-form-urlencoded");
+RequestBody body = RequestBody.create(mediaType, "payload=win-sysrec%3A9ee583c7d0a8b314c947dccfdcd922ca%3ATEST%3Asystem%3A1458174060%3A0.17%3A0.00%3A0.00%3A0.09%3A0.09%3A99.61%3A0.01%3A0.00%3A49%3A790%3A34.20%3A5627684%3A10826808%3A16454492%3A65.80%3A0.00%3A0%3A2490368%3A2490368%3A0%3A0.00%3A0%3A9%3A146.42%3A0%3A0%3A0%3A9%3A146.42%3A8%3A1.23%3A0%3A0%3A5%3A0.59%3A0%3A0%3A14%3A1.82%3A48aae8722de9a0f1b50b906ee32c69f888ee7b2deaf42e3133ec6dbece4ba31b");
+Request request = new Request.Builder()
+  .url("http://<kronomentrix_url>/api/private/send_data")
+  .post(body)
+  .addHeader("token", "<api_token>")
+  .addHeader("content-type", "application/x-www-form-urlencoded")
+  .build();
+
+Response response = client.newCall(request).execute();
+```
+
+> Response
+
+```html
+OK
+```
+
+This is the API call through which data enter Kronometrix. All datasources send data using this API call. This API call **supports only token-based authentication**!
+
+### Request
+
+`http://<kronometrix_url>/api/private/send_data`
+
+Parameter | Details
+--------- | -------
+payload | The message to be processed by Kronometrix
+
+
+### Response
+
+The text `OK` in case of success (with HTTP code `200 OK`), or a text describing the error in case another HTTP code is received (thus denoting a failure).
+
+### General considerations
+
+- the authentication method for this call must be token-based (basic authentication doesn't work)
+- the payload is sent as a `x-www-form-url-encoded` field (not as JSON-encoded data structure, like for the other API endpoints)
+- some messages require to have a hash at the end. Generally, *sha256* hashing algorithm is used. This last field must contain the hash for the entire message up until the last separator
+
 # Summary statistics
 
 ## List available statistics
@@ -1304,6 +1380,8 @@ date | The date for which to list files
 A JSON-encoded array, each element of the array being a hash table with two elements: *file* = the file name; *size* = the file size. 
 
 ## Download raw data file
+
+> Request
 
 ```shell
 curl -X POST -H "Token: <api_token>" -d '{
