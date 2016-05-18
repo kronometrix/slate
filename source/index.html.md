@@ -1461,3 +1461,275 @@ file | File name to download
 ### Response
 
 The file content
+
+# Widgets
+
+## List widgets
+
+> Request
+
+```shell
+
+curl -X POST -H "Token: <api_token>" "http://<kronomentrix_url>/api/get_widgets"
+```
+
+```php
+<?php
+
+$request = new HttpRequest();
+$request->setUrl('http://<kronomentrix_url>/api/get_widgets');
+$request->setMethod(HTTP_METH_POST);
+
+$request->setHeaders(array(
+  'token' => '<api_token>'
+));
+
+try {
+  $response = $request->send();
+
+  echo $response->getBody();
+} catch (HttpException $ex) {
+  echo $ex;
+}
+```
+
+```java
+OkHttpClient client = new OkHttpClient();
+
+Request request = new Request.Builder()
+  .url("http://<kronomentrix_url>/api/get_widgets")
+  .post(null)
+  .addHeader("token", "<api_token>")
+  .build();
+
+Response response = client.newCall(request).execute();
+```
+
+> Response
+
+```json
+{
+  "bc34d59ea95b38992569b9ac79e37b32": {
+    "subscription_id": "9ee583c7d0a8b314c947dccfdcd922ca",
+    "subscription_name": "Computer Performance",
+    "params": {
+      "cpu": {
+        "val": "566ac121-59c7-509d-92e0-028b3c8d6154:system:linux-sysrec:cpupct:LAST:300:300"
+      }
+    },
+    "settings": {
+      "type": "gauge",
+      "gauge_color": "#55af0f",
+      "gauge_aswidget": true
+    },
+    "name": "CPU Gauge",
+    "description": ""
+  },
+  "7a550181d038429b1dd4f8ccbc1ac758": {
+    "subscription_id": "9ee583c7d0a8b314c947dccfdcd922ca",
+    "subscription_name": "Computer Performance",
+    "params": {
+      "cpu": {
+        "val": "527debbd-c89b-5ea9-8052-ea8a4ae93cee:system:win-sysrec:cpupct:AVG:10800:60",
+        "color": "#619639"
+      },
+      "memory": {
+        "val": "527debbd-c89b-5ea9-8052-ea8a4ae93cee:system:win-sysrec:memusedpct:AVG:10800:60",
+        "color": "#0e74b2"
+      }
+    },
+    "settings": {
+      "type": "chart",
+      "chart_aswidget": true,
+      "chart_haslegend": true,
+      "chart_type": "line"
+    },
+    "name": "CPU & Memory utilization",
+    "description": "in %"
+  }
+}
+```
+
+This endpoint lists the available widgets for the current user, with associated information.
+
+### Request
+
+`http://<kronometrix_url>/api/get_widgets`
+
+*No parameters needed*
+
+### Response
+
+A JSON-encoded array, each element of the array corresponding to a widget, having as the key the widget ID and containing these fields:
+
+Field | Details
+----- | -------
+name | The name of the widget
+description | The description of the widget
+subscription_id | The ID of the subscription
+subscription_name | The name of the subscription
+params | An array of params, each element having as key the name of the param (unique) and as value a hash-table with the elements "val" having the param's value and "color" having the line color (color needed only for chart widgets)
+settings | A hash-table containing at least one element - "type", which can be "chart", "indicator" or "gauge"; the rest of the hash's elements are dependant on the type of the widget
+
+## Create new widget
+
+> Request
+
+```shell
+curl -X POST -H "Token: <api_token>" -d '{
+    "params": {
+        
+    }
+}' "http://<kronomentrix_url>/api/create_widget"
+```
+
+```php
+<?php
+
+$request = new HttpRequest();
+$request->setUrl('http://<kronomentrix_url>/api/create_widget');
+$request->setMethod(HTTP_METH_POST);
+
+$request->setHeaders(array(
+  'token' => '<api_token>'
+));
+
+$request->setBody('{
+    "params": {
+        
+    }
+}');
+
+try {
+  $response = $request->send();
+
+  echo $response->getBody();
+} catch (HttpException $ex) {
+  echo $ex;
+}
+```
+
+```java
+OkHttpClient client = new OkHttpClient();
+
+MediaType mediaType = MediaType.parse("application/octet-stream");
+RequestBody body = RequestBody.create(mediaType, "{\n  }\n}");
+Request request = new Request.Builder()
+  .url("http://<kronomentrix_url>/api/create_widget")
+  .post(body)
+  .addHeader("token", "<api_token>")
+  .build();
+
+Response response = client.newCall(request).execute();
+```
+
+> Response
+
+```json
+{
+  "widget_id": "5a332f210e37bb8c2a928bccd5423e33"
+}
+```
+
+This endpoint allows the user to create a new widget of a specified type, for a specified subscription.
+
+### Request
+
+`http://<kronometrix_url>/api/create_widget`
+
+Parameter | Details
+--------- | -------
+
+
+### Response
+
+The ID of the new widget
+
+Field | Details
+----- | -------
+widget_id | The ID of the new widget
+
+## Delete widgets
+
+> Request
+
+```shell
+curl -X POST -H "Token: <api_token>" -d '{
+    "params": {
+        "widgets": ["79a58bc264faa53967c532d43377fe38", "1415799bc10b5a1aae81ac862fde795b"]
+    }
+}' "http://<kronomentrix_url>/api/delete_widgets"
+```
+
+```php
+<?php
+
+$request = new HttpRequest();
+$request->setUrl('http://<kronomentrix_url>/api/delete_widgets');
+$request->setMethod(HTTP_METH_POST);
+
+$request->setHeaders(array(
+  'token' => '<api_token>'
+));
+
+$request->setBody('{
+    "params": {
+        "widgets": ["79a58bc264faa53967c532d43377fe38", "1415799bc10b5a1aae81ac862fde795b"]
+    }
+}');
+
+try {
+  $response = $request->send();
+
+  echo $response->getBody();
+} catch (HttpException $ex) {
+  echo $ex;
+}
+```
+
+```java
+OkHttpClient client = new OkHttpClient();
+
+MediaType mediaType = MediaType.parse("application/octet-stream");
+RequestBody body = RequestBody.create(mediaType, "{\n    \"params\": {\n        \"widgets\": [\"79a58bc264faa53967c532d43377fe38\", \"1415799bc10b5a1aae81ac862fde795b\"]\n    }\n}");
+Request request = new Request.Builder()
+  .url("http://<kronomentrix_url>/api/delete_widgets")
+  .post(body)
+  .addHeader("token", "<api_token>")
+  .build();
+
+Response response = client.newCall(request).execute();
+```
+
+> Response
+
+```json
+{
+  "deleted": [
+    "79a58bc264faa53967c532d43377fe38",
+    "1415799bc10b5a1aae81ac862fde795b"
+  ]
+}
+```
+
+This endpoint allows the user to delete one or many widgets of his own. 
+
+<aside class="warning">
+Attention! This operation can't be reverted, so use with care!
+</aside>
+
+### Request
+
+`http://<kronometrix_url>/api/delete_widgets`
+
+Parameter | Details
+--------- | -------
+widgets | An array of widget IDs
+
+### Response
+
+The list of widget IDs that have been deleted
+
+Field | Details
+----- | -------
+deleted | An array of widget IDs that have been deleted
