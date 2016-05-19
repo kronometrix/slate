@@ -1788,6 +1788,365 @@ Attention! This operation can&rsquo;t be reverted, so use with care!
 
 <p>The file content</p>
 
+<h1 id="widgets">Widgets</h1>
+
+<h2 id="list-widgets">List widgets</h2>
+
+<blockquote>
+<p>Request</p>
+</blockquote>
+<pre class="highlight shell"><code>
+curl -X POST -H <span class="s2">"Token: &lt;api_token&gt;"</span> <span class="s2">"http://&lt;kronomentrix_url&gt;/api/get_widgets"</span>
+</code></pre>
+<pre class="highlight php"><code><span class="cp">&lt;?php</span>
+
+<span class="nv">$request</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">HttpRequest</span><span class="p">();</span>
+<span class="nv">$request</span><span class="o">-&gt;</span><span class="na">setUrl</span><span class="p">(</span><span class="s1">'http://&lt;kronomentrix_url&gt;/api/get_widgets'</span><span class="p">);</span>
+<span class="nv">$request</span><span class="o">-&gt;</span><span class="na">setMethod</span><span class="p">(</span><span class="nx">HTTP_METH_POST</span><span class="p">);</span>
+
+<span class="nv">$request</span><span class="o">-&gt;</span><span class="na">setHeaders</span><span class="p">(</span><span class="k">array</span><span class="p">(</span>
+  <span class="s1">'token'</span> <span class="o">=&gt;</span> <span class="s1">'&lt;api_token&gt;'</span>
+<span class="p">));</span>
+
+<span class="k">try</span> <span class="p">{</span>
+  <span class="nv">$response</span> <span class="o">=</span> <span class="nv">$request</span><span class="o">-&gt;</span><span class="na">send</span><span class="p">();</span>
+
+  <span class="k">echo</span> <span class="nv">$response</span><span class="o">-&gt;</span><span class="na">getBody</span><span class="p">();</span>
+<span class="p">}</span> <span class="k">catch</span> <span class="p">(</span><span class="nx">HttpException</span> <span class="nv">$ex</span><span class="p">)</span> <span class="p">{</span>
+  <span class="k">echo</span> <span class="nv">$ex</span><span class="p">;</span>
+<span class="p">}</span>
+</code></pre>
+<pre class="highlight java"><code><span class="n">OkHttpClient</span> <span class="n">client</span> <span class="o">=</span> <span class="k">new</span> <span class="n">OkHttpClient</span><span class="o">();</span>
+
+<span class="n">Request</span> <span class="n">request</span> <span class="o">=</span> <span class="k">new</span> <span class="n">Request</span><span class="o">.</span><span class="na">Builder</span><span class="o">()</span>
+  <span class="o">.</span><span class="na">url</span><span class="o">(</span><span class="s">"http://&lt;kronomentrix_url&gt;/api/get_widgets"</span><span class="o">)</span>
+  <span class="o">.</span><span class="na">post</span><span class="o">(</span><span class="kc">null</span><span class="o">)</span>
+  <span class="o">.</span><span class="na">addHeader</span><span class="o">(</span><span class="s">"token"</span><span class="o">,</span> <span class="s">"&lt;api_token&gt;"</span><span class="o">)</span>
+  <span class="o">.</span><span class="na">build</span><span class="o">();</span>
+
+<span class="n">Response</span> <span class="n">response</span> <span class="o">=</span> <span class="n">client</span><span class="o">.</span><span class="na">newCall</span><span class="o">(</span><span class="n">request</span><span class="o">).</span><span class="na">execute</span><span class="o">();</span>
+</code></pre>
+
+<blockquote>
+<p>Response</p>
+</blockquote>
+<pre class="highlight json"><code><span class="p">{</span><span class="w">
+  </span><span class="nt">"bc34d59ea95b38992569b9ac79e37b32"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+    </span><span class="nt">"subscription_id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"9ee583c7d0a8b314c947dccfdcd922ca"</span><span class="p">,</span><span class="w">
+    </span><span class="nt">"subscription_name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Computer Performance"</span><span class="p">,</span><span class="w">
+    </span><span class="nt">"params"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+      </span><span class="nt">"cpu"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+        </span><span class="nt">"val"</span><span class="p">:</span><span class="w"> </span><span class="s2">"566ac121-59c7-509d-92e0-028b3c8d6154:system:linux-sysrec:cpupct:LAST:300:300"</span><span class="w">
+      </span><span class="p">}</span><span class="w">
+    </span><span class="p">},</span><span class="w">
+    </span><span class="nt">"settings"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+      </span><span class="nt">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"gauge"</span><span class="p">,</span><span class="w">
+      </span><span class="nt">"gauge_color"</span><span class="p">:</span><span class="w"> </span><span class="s2">"#55af0f"</span><span class="p">,</span><span class="w">
+      </span><span class="nt">"gauge_aswidget"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="w">
+    </span><span class="p">},</span><span class="w">
+    </span><span class="nt">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"CPU Gauge"</span><span class="p">,</span><span class="w">
+    </span><span class="nt">"description"</span><span class="p">:</span><span class="w"> </span><span class="s2">""</span><span class="w">
+  </span><span class="p">},</span><span class="w">
+  </span><span class="nt">"7a550181d038429b1dd4f8ccbc1ac758"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+    </span><span class="nt">"subscription_id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"9ee583c7d0a8b314c947dccfdcd922ca"</span><span class="p">,</span><span class="w">
+    </span><span class="nt">"subscription_name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Computer Performance"</span><span class="p">,</span><span class="w">
+    </span><span class="nt">"params"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+      </span><span class="nt">"cpu"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+        </span><span class="nt">"val"</span><span class="p">:</span><span class="w"> </span><span class="s2">"527debbd-c89b-5ea9-8052-ea8a4ae93cee:system:win-sysrec:cpupct:AVG:10800:60"</span><span class="p">,</span><span class="w">
+        </span><span class="nt">"color"</span><span class="p">:</span><span class="w"> </span><span class="s2">"#619639"</span><span class="w">
+      </span><span class="p">},</span><span class="w">
+      </span><span class="nt">"memory"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+        </span><span class="nt">"val"</span><span class="p">:</span><span class="w"> </span><span class="s2">"527debbd-c89b-5ea9-8052-ea8a4ae93cee:system:win-sysrec:memusedpct:AVG:10800:60"</span><span class="p">,</span><span class="w">
+        </span><span class="nt">"color"</span><span class="p">:</span><span class="w"> </span><span class="s2">"#0e74b2"</span><span class="w">
+      </span><span class="p">}</span><span class="w">
+    </span><span class="p">},</span><span class="w">
+    </span><span class="nt">"settings"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+      </span><span class="nt">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"chart"</span><span class="p">,</span><span class="w">
+      </span><span class="nt">"chart_aswidget"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span><span class="w">
+      </span><span class="nt">"chart_haslegend"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span><span class="w">
+      </span><span class="nt">"chart_type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"line"</span><span class="w">
+    </span><span class="p">},</span><span class="w">
+    </span><span class="nt">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"CPU &amp; Memory utilization"</span><span class="p">,</span><span class="w">
+    </span><span class="nt">"description"</span><span class="p">:</span><span class="w"> </span><span class="s2">"in %"</span><span class="w">
+  </span><span class="p">}</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre>
+
+<p>This endpoint lists the available widgets for the current user, with associated information.</p>
+
+<h3 id="request">Request</h3>
+
+<p><code class="prettyprint">http://&lt;kronometrix_url&gt;/api/get_widgets</code></p>
+
+<p><em>No parameters needed</em></p>
+
+<h3 id="response">Response</h3>
+
+<p>A JSON-encoded array, each element of the array corresponding to a widget, having as the key the widget ID and containing these fields:</p>
+
+<table><thead>
+<tr>
+<th>Field</th>
+<th>Details</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>name</td>
+<td>The name of the widget</td>
+</tr>
+<tr>
+<td>description</td>
+<td>The description of the widget</td>
+</tr>
+<tr>
+<td>subscription_id</td>
+<td>The ID of the subscription</td>
+</tr>
+<tr>
+<td>subscription_name</td>
+<td>The name of the subscription</td>
+</tr>
+<tr>
+<td>params</td>
+<td>An array of params, each element having as key the name of the param (unique) and as value a hash-table with the elements &ldquo;val&rdquo; having the param&rsquo;s value and &ldquo;color&rdquo; having the line color (color needed only for chart widgets)</td>
+</tr>
+<tr>
+<td>settings</td>
+<td>A hash-table containing at least one element - &ldquo;type&rdquo;, which can be &ldquo;chart&rdquo;, &ldquo;indicator&rdquo; or &ldquo;gauge&rdquo;; the rest of the hash&rsquo;s elements are dependant on the type of the widget</td>
+</tr>
+</tbody></table>
+
+<h2 id="create-new-widget">Create new widget</h2>
+
+<blockquote>
+<p>Request</p>
+</blockquote>
+<pre class="highlight shell"><code>curl -X POST -H <span class="s2">"Token: &lt;api_token&gt;"</span> -d <span class="s1">'{
+    "params": {
+        "name": "API-created widget",
+        "description": "The description of the API-created widget",
+        "subscription_id": "9ee583c7d0a8b314c947dccfdcd922ca",
+        "params": {
+            "cpu": {"val": "527debbd-c89b-5ea9-8052-ea8a4ae93cee:system:win-sysrec:cpupct:AVG:10800:60", "color": "#D40B51"},
+            "memory": {"val": "527debbd-c89b-5ea9-8052-ea8a4ae93cee:system:win-sysrec:memusedpct:AVG:10800:60", "color": "#21C4B1"}
+        },
+        "settings": {
+            "type": "chart",
+            "chart_type": "line",
+            "chart_aswidget": true,
+            "chart_haslegend": true
+        }
+    }
+}'</span> <span class="s2">"http://&lt;kronomentrix_url&gt;/api/create_widget"</span>
+</code></pre>
+<pre class="highlight php"><code><span class="cp">&lt;?php</span>
+
+<span class="nv">$request</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">HttpRequest</span><span class="p">();</span>
+<span class="nv">$request</span><span class="o">-&gt;</span><span class="na">setUrl</span><span class="p">(</span><span class="s1">'http://&lt;kronomentrix_url&gt;/api/create_widget'</span><span class="p">);</span>
+<span class="nv">$request</span><span class="o">-&gt;</span><span class="na">setMethod</span><span class="p">(</span><span class="nx">HTTP_METH_POST</span><span class="p">);</span>
+
+<span class="nv">$request</span><span class="o">-&gt;</span><span class="na">setHeaders</span><span class="p">(</span><span class="k">array</span><span class="p">(</span>
+  <span class="s1">'token'</span> <span class="o">=&gt;</span> <span class="s1">'&lt;api_token&gt;'</span>
+<span class="p">));</span>
+
+<span class="nv">$request</span><span class="o">-&gt;</span><span class="na">setBody</span><span class="p">(</span><span class="s1">'{
+    "params": {
+        "name": "API-created widget",
+        "description": "The description of the API-created widget",
+        "subscription_id": "9ee583c7d0a8b314c947dccfdcd922ca",
+        "params": {
+            "cpu": {"val": "527debbd-c89b-5ea9-8052-ea8a4ae93cee:system:win-sysrec:cpupct:AVG:10800:60", "color": "#D40B51"},
+            "memory": {"val": "527debbd-c89b-5ea9-8052-ea8a4ae93cee:system:win-sysrec:memusedpct:AVG:10800:60", "color": "#21C4B1"}
+        },
+        "settings": {
+            "type": "chart",
+            "chart_type": "line",
+            "chart_aswidget": true,
+            "chart_haslegend": true
+        }
+    }
+}'</span><span class="p">);</span>
+
+<span class="k">try</span> <span class="p">{</span>
+  <span class="nv">$response</span> <span class="o">=</span> <span class="nv">$request</span><span class="o">-&gt;</span><span class="na">send</span><span class="p">();</span>
+
+  <span class="k">echo</span> <span class="nv">$response</span><span class="o">-&gt;</span><span class="na">getBody</span><span class="p">();</span>
+<span class="p">}</span> <span class="k">catch</span> <span class="p">(</span><span class="nx">HttpException</span> <span class="nv">$ex</span><span class="p">)</span> <span class="p">{</span>
+  <span class="k">echo</span> <span class="nv">$ex</span><span class="p">;</span>
+<span class="p">}</span>
+</code></pre>
+<pre class="highlight java"><code><span class="n">OkHttpClient</span> <span class="n">client</span> <span class="o">=</span> <span class="k">new</span> <span class="n">OkHttpClient</span><span class="o">();</span>
+
+<span class="n">MediaType</span> <span class="n">mediaType</span> <span class="o">=</span> <span class="n">MediaType</span><span class="o">.</span><span class="na">parse</span><span class="o">(</span><span class="s">"application/octet-stream"</span><span class="o">);</span>
+<span class="n">RequestBody</span> <span class="n">body</span> <span class="o">=</span> <span class="n">RequestBody</span><span class="o">.</span><span class="na">create</span><span class="o">(</span><span class="n">mediaType</span><span class="o">,</span> <span class="s">"{\n    \"params\": {\n        \"name\": \"API-created widget\",\n        \"description\": \"The description of the API-created widget\",\n        \"subscription_id\": \"9ee583c7d0a8b314c947dccfdcd922ca\",\n        \"params\": {\n            \"cpu\": {\"val\": \"527debbd-c89b-5ea9-8052-ea8a4ae93cee:system:win-sysrec:cpupct:AVG:10800:60\", \"color\": \"#D40B51\"},\n            \"memory\": {\"val\": \"527debbd-c89b-5ea9-8052-ea8a4ae93cee:system:win-sysrec:memusedpct:AVG:10800:60\", \"color\": \"#21C4B1\"}\n        },\n        \"settings\": {\n            \"type\": \"chart\",\n            \"chart_type\": \"line\",\n            \"chart_aswidget\": true,\n            \"chart_haslegend\": true\n        }\n    }\n}"</span><span class="o">);</span>
+<span class="n">Request</span> <span class="n">request</span> <span class="o">=</span> <span class="k">new</span> <span class="n">Request</span><span class="o">.</span><span class="na">Builder</span><span class="o">()</span>
+  <span class="o">.</span><span class="na">url</span><span class="o">(</span><span class="s">"http://&lt;kronomentrix_url&gt;/api/create_widget"</span><span class="o">)</span>
+  <span class="o">.</span><span class="na">post</span><span class="o">(</span><span class="n">body</span><span class="o">)</span>
+  <span class="o">.</span><span class="na">addHeader</span><span class="o">(</span><span class="s">"token"</span><span class="o">,</span> <span class="s">"&lt;api_token&gt;"</span><span class="o">)</span>
+  <span class="o">.</span><span class="na">build</span><span class="o">();</span>
+
+<span class="n">Response</span> <span class="n">response</span> <span class="o">=</span> <span class="n">client</span><span class="o">.</span><span class="na">newCall</span><span class="o">(</span><span class="n">request</span><span class="o">).</span><span class="na">execute</span><span class="o">();</span>
+</code></pre>
+
+<blockquote>
+<p>Response</p>
+</blockquote>
+<pre class="highlight json"><code><span class="p">{</span><span class="w">
+  </span><span class="nt">"widget_id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"65102c8e86cd5ed2baf60ebf69b31d9e"</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre>
+
+<p>This endpoint allows the user to create a new widget of a specified type, for a specified subscription.</p>
+
+<h3 id="request">Request</h3>
+
+<p><code class="prettyprint">http://&lt;kronometrix_url&gt;/api/create_widget</code></p>
+
+<table><thead>
+<tr>
+<th>Parameter</th>
+<th>Details</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>name</td>
+<td>The name of the new widget</td>
+</tr>
+<tr>
+<td>description</td>
+<td>The description for the new widget</td>
+</tr>
+<tr>
+<td>subscription_id</td>
+<td>The ID of the subscription for which the widget is created</td>
+</tr>
+<tr>
+<td>params</td>
+<td>A hash-table of parameters for this widget; the keys are paramater names, and the values have two elements:<ul><li><em>val</em> = the parameter value, with the format <br/><code>&lt;ds_id&gt;:&lt;device_id&gt;:&lt;message_id&gt;:&lt;parameter&gt;:&lt;stat&gt;:&lt;interval&gt;:&lt;resolution&gt;</code></li><li><em>color</em> = the parameter&rsquo;s line color; needed only for widgets of type <em>chart</em></li></ul></td>
+</tr>
+<tr>
+<td>settings</td>
+<td>A hash-table with the widget settings; each widget type has its own set of settings, as follows: <ul><li><strong>chart</strong>:<ul><li><em>type</em> = &ldquo;chart&rdquo;</li><li><em>chart_type</em> = &ldquo;line&rdquo; or &ldquo;stacked&rdquo;</li><li><em>chart_aswidget</em> = true/false - the control is displayed as widget or not</li><li><em>chart_haslegend</em> = true/false - the chart has a legend or not</li></ul></li><li><strong>gauge</strong>:<ul><li><em>type</em> = &ldquo;gauge&rdquo;</li><li><em>gauge_color</em> = the hex value of the color</li><li><em>gauge_aswidget</em> = true/false - the control is displayed as widget or not</li></ul></li><li><strong>indicator</strong>:<ul><li><em>type</em> = &ldquo;indicator&rdquo;</li><li><em>indicator_type</em> = &ldquo;plain&rdquo;, &ldquo;widget&rdquo; or &ldquo;colored&rdquo;</li><li><em>indicator_color</em> = the hex value of the color; needed only for <em>indicator_type</em>=&ldquo;colored&rdquo;</li><li><em>indicator_decimals</em> = the number of decimals; can be &ldquo;0&rdquo;, &ldquo;1&rdquo; or &ldquo;2&rdquo;</li><li><em>indicator_unit</em> = optional; a string with the indicator&rsquo;s unit</li></ul></li></ul></td>
+</tr>
+</tbody></table>
+
+<aside class="info">
+For the widgets of type <i>chart</i>, all parameters on a chart must have <b>the same interval and resolution</b>!
+</aside>
+
+<h3 id="response">Response</h3>
+
+<p>The ID of the new widget</p>
+
+<table><thead>
+<tr>
+<th>Field</th>
+<th>Details</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>widget_id</td>
+<td>The ID of the new widget</td>
+</tr>
+</tbody></table>
+
+<h2 id="delete-widgets">Delete widgets</h2>
+
+<blockquote>
+<p>Request</p>
+</blockquote>
+<pre class="highlight shell"><code>curl -X POST -H <span class="s2">"Token: &lt;api_token&gt;"</span> -d <span class="s1">'{
+    "params": {
+        "widgets": ["79a58bc264faa53967c532d43377fe38", "1415799bc10b5a1aae81ac862fde795b"]
+    }
+}'</span> <span class="s2">"http://&lt;kronomentrix_url&gt;/api/delete_widgets"</span>
+</code></pre>
+<pre class="highlight php"><code><span class="cp">&lt;?php</span>
+
+<span class="nv">$request</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">HttpRequest</span><span class="p">();</span>
+<span class="nv">$request</span><span class="o">-&gt;</span><span class="na">setUrl</span><span class="p">(</span><span class="s1">'http://&lt;kronomentrix_url&gt;/api/delete_widgets'</span><span class="p">);</span>
+<span class="nv">$request</span><span class="o">-&gt;</span><span class="na">setMethod</span><span class="p">(</span><span class="nx">HTTP_METH_POST</span><span class="p">);</span>
+
+<span class="nv">$request</span><span class="o">-&gt;</span><span class="na">setHeaders</span><span class="p">(</span><span class="k">array</span><span class="p">(</span>
+  <span class="s1">'token'</span> <span class="o">=&gt;</span> <span class="s1">'&lt;api_token&gt;'</span>
+<span class="p">));</span>
+
+<span class="nv">$request</span><span class="o">-&gt;</span><span class="na">setBody</span><span class="p">(</span><span class="s1">'{
+    "params": {
+        "widgets": ["79a58bc264faa53967c532d43377fe38", "1415799bc10b5a1aae81ac862fde795b"]
+    }
+}'</span><span class="p">);</span>
+
+<span class="k">try</span> <span class="p">{</span>
+  <span class="nv">$response</span> <span class="o">=</span> <span class="nv">$request</span><span class="o">-&gt;</span><span class="na">send</span><span class="p">();</span>
+
+  <span class="k">echo</span> <span class="nv">$response</span><span class="o">-&gt;</span><span class="na">getBody</span><span class="p">();</span>
+<span class="p">}</span> <span class="k">catch</span> <span class="p">(</span><span class="nx">HttpException</span> <span class="nv">$ex</span><span class="p">)</span> <span class="p">{</span>
+  <span class="k">echo</span> <span class="nv">$ex</span><span class="p">;</span>
+<span class="p">}</span>
+</code></pre>
+<pre class="highlight java"><code><span class="n">OkHttpClient</span> <span class="n">client</span> <span class="o">=</span> <span class="k">new</span> <span class="n">OkHttpClient</span><span class="o">();</span>
+
+<span class="n">MediaType</span> <span class="n">mediaType</span> <span class="o">=</span> <span class="n">MediaType</span><span class="o">.</span><span class="na">parse</span><span class="o">(</span><span class="s">"application/octet-stream"</span><span class="o">);</span>
+<span class="n">RequestBody</span> <span class="n">body</span> <span class="o">=</span> <span class="n">RequestBody</span><span class="o">.</span><span class="na">create</span><span class="o">(</span><span class="n">mediaType</span><span class="o">,</span> <span class="s">"{\n    \"params\": {\n        \"widgets\": [\"79a58bc264faa53967c532d43377fe38\", \"1415799bc10b5a1aae81ac862fde795b\"]\n    }\n}"</span><span class="o">);</span>
+<span class="n">Request</span> <span class="n">request</span> <span class="o">=</span> <span class="k">new</span> <span class="n">Request</span><span class="o">.</span><span class="na">Builder</span><span class="o">()</span>
+  <span class="o">.</span><span class="na">url</span><span class="o">(</span><span class="s">"http://&lt;kronomentrix_url&gt;/api/delete_widgets"</span><span class="o">)</span>
+  <span class="o">.</span><span class="na">post</span><span class="o">(</span><span class="n">body</span><span class="o">)</span>
+  <span class="o">.</span><span class="na">addHeader</span><span class="o">(</span><span class="s">"token"</span><span class="o">,</span> <span class="s">"&lt;api_token&gt;"</span><span class="o">)</span>
+  <span class="o">.</span><span class="na">build</span><span class="o">();</span>
+
+<span class="n">Response</span> <span class="n">response</span> <span class="o">=</span> <span class="n">client</span><span class="o">.</span><span class="na">newCall</span><span class="o">(</span><span class="n">request</span><span class="o">).</span><span class="na">execute</span><span class="o">();</span>
+</code></pre>
+
+<blockquote>
+<p>Response</p>
+</blockquote>
+<pre class="highlight json"><code><span class="p">{</span><span class="w">
+  </span><span class="nt">"deleted"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+    </span><span class="s2">"79a58bc264faa53967c532d43377fe38"</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"1415799bc10b5a1aae81ac862fde795b"</span><span class="w">
+  </span><span class="p">]</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre>
+
+<p>This endpoint allows the user to delete one or many widgets of his own. </p>
+
+<aside class="warning">
+Attention! This operation can&rsquo;t be reverted, so use with care!
+</aside>
+
+<h3 id="request">Request</h3>
+
+<p><code class="prettyprint">http://&lt;kronometrix_url&gt;/api/delete_widgets</code></p>
+
+<table><thead>
+<tr>
+<th>Parameter</th>
+<th>Details</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>widgets</td>
+<td>An array of widget IDs</td>
+</tr>
+</tbody></table>
+
+<h3 id="response">Response</h3>
+
+<p>The list of widget IDs that have been deleted</p>
+
+<table><thead>
+<tr>
+<th>Field</th>
+<th>Details</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>deleted</td>
+<td>An array of widget IDs that have been deleted</td>
+</tr>
+</tbody></table>
+
       </div>
       <div class="dark-box">
           <div class="lang-selector">
