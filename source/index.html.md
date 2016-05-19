@@ -1578,7 +1578,19 @@ settings | A hash-table containing at least one element - "type", which can be "
 ```shell
 curl -X POST -H "Token: <api_token>" -d '{
     "params": {
-        
+        "name": "API-created widget",
+        "description": "The description of the API-created widget",
+        "subscription_id": "9ee583c7d0a8b314c947dccfdcd922ca",
+        "params": {
+            "cpu": {"val": "527debbd-c89b-5ea9-8052-ea8a4ae93cee:system:win-sysrec:cpupct:AVG:10800:60", "color": "#D40B51"},
+            "memory": {"val": "527debbd-c89b-5ea9-8052-ea8a4ae93cee:system:win-sysrec:memusedpct:AVG:10800:60", "color": "#21C4B1"}
+        },
+        "settings": {
+            "type": "chart",
+            "chart_type": "line",
+            "chart_aswidget": true,
+            "chart_haslegend": true
+        }
     }
 }' "http://<kronomentrix_url>/api/create_widget"
 ```
@@ -1596,7 +1608,19 @@ $request->setHeaders(array(
 
 $request->setBody('{
     "params": {
-        
+        "name": "API-created widget",
+        "description": "The description of the API-created widget",
+        "subscription_id": "9ee583c7d0a8b314c947dccfdcd922ca",
+        "params": {
+            "cpu": {"val": "527debbd-c89b-5ea9-8052-ea8a4ae93cee:system:win-sysrec:cpupct:AVG:10800:60", "color": "#D40B51"},
+            "memory": {"val": "527debbd-c89b-5ea9-8052-ea8a4ae93cee:system:win-sysrec:memusedpct:AVG:10800:60", "color": "#21C4B1"}
+        },
+        "settings": {
+            "type": "chart",
+            "chart_type": "line",
+            "chart_aswidget": true,
+            "chart_haslegend": true
+        }
     }
 }');
 
@@ -1613,7 +1637,7 @@ try {
 OkHttpClient client = new OkHttpClient();
 
 MediaType mediaType = MediaType.parse("application/octet-stream");
-RequestBody body = RequestBody.create(mediaType, "{\n  }\n}");
+RequestBody body = RequestBody.create(mediaType, "{\n    \"params\": {\n        \"name\": \"API-created widget\",\n        \"description\": \"The description of the API-created widget\",\n        \"subscription_id\": \"9ee583c7d0a8b314c947dccfdcd922ca\",\n        \"params\": {\n            \"cpu\": {\"val\": \"527debbd-c89b-5ea9-8052-ea8a4ae93cee:system:win-sysrec:cpupct:AVG:10800:60\", \"color\": \"#D40B51\"},\n            \"memory\": {\"val\": \"527debbd-c89b-5ea9-8052-ea8a4ae93cee:system:win-sysrec:memusedpct:AVG:10800:60\", \"color\": \"#21C4B1\"}\n        },\n        \"settings\": {\n            \"type\": \"chart\",\n            \"chart_type\": \"line\",\n            \"chart_aswidget\": true,\n            \"chart_haslegend\": true\n        }\n    }\n}");
 Request request = new Request.Builder()
   .url("http://<kronomentrix_url>/api/create_widget")
   .post(body)
@@ -1627,7 +1651,7 @@ Response response = client.newCall(request).execute();
 
 ```json
 {
-  "widget_id": "5a332f210e37bb8c2a928bccd5423e33"
+  "widget_id": "65102c8e86cd5ed2baf60ebf69b31d9e"
 }
 ```
 
@@ -1639,7 +1663,15 @@ This endpoint allows the user to create a new widget of a specified type, for a 
 
 Parameter | Details
 --------- | -------
+name | The name of the new widget
+description | The description for the new widget
+subscription_id | The ID of the subscription for which the widget is created
+params | A hash-table of parameters for this widget; the keys are paramater names, and the values have two elements:<ul><li>*val* = the parameter value, with the format <br/><code>&lt;ds_id&gt;:&lt;device_id&gt;:&lt;message_id&gt;:&lt;parameter&gt;:&lt;stat&gt;:&lt;interval&gt;:&lt;resolution&gt;</code></li><li>*color* = the parameter's line color; needed only for widgets of type *chart*</li></ul>
+settings | A hash-table with the widget settings; each widget type has its own set of settings, as follows: <ul><li>**chart**:<ul><li>*type* = "chart"</li><li>*chart_type* = "line" or "stacked"</li><li>*chart_aswidget* = true/false - the control is displayed as widget or not</li><li>*chart_haslegend* = true/false - the chart has a legend or not</li></ul></li><li>**gauge**:<ul><li>*type* = "gauge"</li><li>*gauge_color* = the hex value of the color</li><li>*gauge_aswidget* = true/false - the control is displayed as widget or not</li></ul></li><li>**indicator**:<ul><li>*type* = "indicator"</li><li>*indicator_type* = "plain", "widget" or "colored"</li><li>*indicator_color* = the hex value of the color; needed only for *indicator_type*="colored"</li><li>*indicator_decimals* = the number of decimals; can be "0", "1" or "2"</li><li>*indicator_unit* = optional; a string with the indicator's unit</li></ul></li></ul>  
 
+<aside class="info">
+For the widgets of type <i>chart</i>, all parameters on a chart must have <b>the same interval and resolution</b>!
+</aside>
 
 ### Response
 
