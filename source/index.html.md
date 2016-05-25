@@ -1765,3 +1765,75 @@ The list of widget IDs that have been deleted
 Field | Details
 ----- | -------
 deleted | An array of widget IDs that have been deleted
+
+## Get widget embed code
+
+> Request
+
+```shell
+curl -X POST -H "Token: <api_token>" -d '{
+    "params": {
+        "widget_id": "7a550181d038429b1dd4f8ccbc1ac758"
+    }
+}' "http://<kronomentrix_url>/api/get_widget_embed_code"
+```
+
+```php
+<?php
+
+$request = new HttpRequest();
+$request->setUrl('http://<kronomentrix_url>/api/get_widget_embed_code');
+$request->setMethod(HTTP_METH_POST);
+
+$request->setHeaders(array(
+  'token' => '<api_token>'
+));
+
+$request->setBody('{
+    "params": {
+        "widget_id": "7a550181d038429b1dd4f8ccbc1ac758"
+    }
+}');
+
+try {
+  $response = $request->send();
+
+  echo $response->getBody();
+} catch (HttpException $ex) {
+  echo $ex;
+}
+```
+
+```java
+OkHttpClient client = new OkHttpClient();
+
+MediaType mediaType = MediaType.parse("application/octet-stream");
+RequestBody body = RequestBody.create(mediaType, "{\n    \"params\": {\n        \"widget_id\": \"7a550181d038429b1dd4f8ccbc1ac758\"\n    }\n}");
+Request request = new Request.Builder()
+  .url("http://<kronomentrix_url>/api/get_widget_embed_code")
+  .post(body)
+  .addHeader("token", "<api_token>")
+  .build();
+
+Response response = client.newCall(request).execute();
+```
+
+> Response
+
+```html
+<iframe width="600" height="300" frameborder="0" src="http://<kronometrix_url>/widgets/<uid>/7a550181d038429b1dd4f8ccbc1ac758"></iframe>
+```
+
+This endpoint provides the possibility to easily obtain the HTTP code to embed the widget on another web page.
+
+### Request
+
+`http://<kronometrix_url>/api/get_widget_embed_code`
+
+Parameter | Details
+--------- | -------
+widget_id | The ID of the widget to get the embed code for
+
+### Response
+
+The HTML code to use in your web page to embed this widget
