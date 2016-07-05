@@ -1837,3 +1837,106 @@ widget_id | The ID of the widget to get the embed code for
 ### Response
 
 The HTML code to use in your web page to embed this widget
+
+# Info
+
+## Get appliance information
+
+> Request
+
+```shell
+curl -X POST -H "Token: <api_token>" "http://<kronomentrix_url>/api/get_kinfo"
+```
+
+```php
+<?php
+
+$request = new HttpRequest();
+$request->setUrl('http://<kronomentrix_url>/api/get_kinfo');
+$request->setMethod(HTTP_METH_POST);
+
+$request->setHeaders(array(
+  'token' => '<api_token>'
+));
+
+try {
+  $response = $request->send();
+
+  echo $response->getBody();
+} catch (HttpException $ex) {
+  echo $ex;
+}
+```
+
+```java
+OkHttpClient client = new OkHttpClient();
+
+MediaType mediaType = MediaType.parse("application/octet-stream");
+Request request = new Request.Builder()
+  .url("http://<kronomentrix_url>/api/get_kinfo")
+  .post(null)
+  .addHeader("token", "<api_token>")
+  .build();
+
+Response response = client.newCall(request).execute();
+```
+
+> Response
+
+```json
+[
+  {
+    "Type": "Kx"
+  },
+  {
+    "Version": "1.3.2"
+  },
+  {
+    "Platform": "x64"
+  },
+  {
+    "Last Updated": "NA"
+  },
+  {
+    "API": "1.0.0"
+  },
+  {
+    "Modules": [
+      "authenticator: kauth 1.3.2",
+      "kernel: kkernel 1.3.2",
+      "messenger: kmesg 1.3.2",
+      "monitor: kmon 1.3.1.1"
+    ]
+  },
+  {
+    "ID": "NA"
+  },
+  {
+    "Manufactured": "Mon Feb 22 14:53:22 UTC 2016"
+  },
+  {
+    "Vendor": "SDR Dynamics, Helsinki, Finland"
+  },
+  {
+    "Registrant": "NA"
+  },
+  {
+    "Email": "NA"
+  },
+  {
+    "License": "NA"
+  }
+]
+```
+
+This endpoint provides the possibility to list details about the Kronometrix installation.
+
+### Request
+
+`http://<kronometrix_url>/api/get_kinfo`
+
+*No parameters needed*
+
+### Response
+
+A JSON-encoded array with various details about the Kronometrix installation.
