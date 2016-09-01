@@ -1299,6 +1299,36 @@ Attention! This operation can&rsquo;t be reverted, so use with care!
 <li>some messages require to have a hash at the end. Generally, <em>sha256</em> hashing algorithm is used. This last field must contain the hash for the entire message up until the last separator</li>
 </ul>
 
+<h3 id="payload-format">Payload format</h3>
+
+<p>The payload contains a single message which is transmitted to Kronometrix. All messages are defined within the Kronometrix platform and are uniquely identified by their <code class="prettyprint">message_id</code>. </p>
+
+<p>A message is composed of multiple fields separated by a character, which also is defined within the Kronometrix platform. The separator character is a property of the message. 
+As a general recommendation, we propose the use of characters <code class="prettyprint">:</code> or <code class="prettyprint">;</code> as separators (keep in mind that the character <code class="prettyprint">:</code> can be also found in the ISO formatted date field, so in this case the character <code class="prettyprint">;</code> is recommended). </p>
+
+<p>The order of the fields is also defined in the platform as a characteristic of the message. The only restriction here is that the message <strong>must always begin with the message ID</strong>. The rest of the fields can be defined in any order, but the order in which the fields are specified in the message definition must be the same as the order in which the fields appear in the sent message.</p>
+
+<p>A message is composed of the following fields:</p>
+
+<ul>
+<li><strong>message_id</strong>: the ID of the message. This ID uniquely identifies the message within the platform. The message <strong>must always begin with the message ID</strong>.</li>
+<li><strong>sid</strong>: the subscription ID. All messages must have this field.</li>
+<li><strong>dsid</strong>: the ID of the datasource. All messages must have this field. Datasources are provisioned (created) when the first message with a new <code class="prettyprint">dsid</code> is received. Then, to send data for the same datasource, you must use the same <code class="prettyprint">dsid</code>.</li>
+<li><strong>dev_id</strong>: the ID of the device. All messages must have this field. A datasource can have multiple devices (for example, for a computer, which is regarded as a datasource, you can have multiple devices, like <em>CPU0</em>, <em>CPU1</em>, <em>disk_c</em> etc.). If you don&rsquo;t want to use this feature, you can use a generic device ID, like <code class="prettyprint">system</code></li>
+<li><strong>timestamp</strong>: the timestamp of the message. The timestamp can be specified as a UNIX timestamp (like the one in the example - the number of seconds since 1.01.1970) or as an ISO formatted date: <code class="prettyprint">2016-09-27 18:50:07</code></li>
+<li>various fields of type &ldquo;numeric&rdquo;, &ldquo;counter&rdquo;, &ldquo;inventory&rdquo;, &ldquo;metadata&rdquo;, &ldquo;status&rdquo; or &ldquo;instrument&rdquo;:
+
+<ul>
+<li><em>numeric</em>: a numeric field, which is processed for generating all statistics defined in the message. The field is also stored in the raw data file</li>
+<li><em>counter</em>: a numeric field which contains the sum of the values until the current moment. When received, it is processed as a difference between this value and the previous received value. The field is also stored in the raw data file</li>
+<li><em>inventory</em>: a general text field which is recorded as a &ldquo;property&rdquo; of the datasource. It can contain, for example, the host name, the OS name or version etc. The field is also stored in the raw data file</li>
+<li><em>metadata</em>: a general text field which sets one of the following object properties: <em>datasource name</em>, <em>datasource description</em>. The field is also stored in the raw data file only if it is defined as <code class="prettyprint">ds_name_log</code> (for setting the datasource name)</li>
+<li><em>status</em>: a general text field which contains a status information. The possible values for this field are defined in the message definition. When received, Kronometrix calculates what percent of the time is spent for each status value. The field is also stored in the raw data file</li>
+<li><em>instrument</em>: a numeric field, similar with the type <em>numeric</em>, but which is <strong>not</strong> stored in the raw data file </li>
+</ul></li>
+<li><strong>hash</strong>: this field is optional (there are some messages which are defined without a hash field). It contains a hash (of type SHA256) of the entire message, without the hash field and the separator before it. The hash field must always be the last field in the message. </li>
+</ul>
+
 <h1 id="summary-statistics">Summary statistics</h1>
 
 <h2 id="list-available-statistics">List available statistics</h2>
@@ -2225,7 +2255,7 @@ Attention! This operation can&rsquo;t be reverted, so use with care!
 
 <h1 id="info">Info</h1>
 
-<h2 id="get-appliance-information">Get appliance information</h2>
+<h2 id="get-data-analytics-platform-information">Get data analytics platform information</h2>
 
 <blockquote>
 <p>Request</p>
