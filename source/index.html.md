@@ -1034,6 +1034,31 @@ The text `OK` in case of success (with HTTP code `200 OK`), or a text describing
 - the payload is sent as a `x-www-form-url-encoded` field (not as JSON-encoded data structure, like for the other API endpoints)
 - some messages require to have a hash at the end. Generally, *sha256* hashing algorithm is used. This last field must contain the hash for the entire message up until the last separator
 
+### Payload format
+
+The payload contains a single message which is transmitted to Kronometrix. All messages are defined within the Kronometrix platform and are uniquely identified by their `message_id`. 
+
+A message is composed of multiple fields separated by a character, which also is defined within the Kronometrix platform. The separator character is a property of the message. 
+As a general recommendation, we propose the use of characters `:` or `;` as separators (keep in mind that the character `:` can be also found in the ISO formatted date field, so in this case the character `;` is recommended). 
+
+The order of the fields is also defined in the platform as a characteristic of the message. The only restriction here is that the message **must always begin with the message ID**. The rest of the fields can be defined in any order, but the order in which the fields are specified in the message definition must be the same as the order in which the fields appear in the sent message.
+
+A message is composed of the following fields:
+
+- **message_id**: the ID of the message. This ID uniquely identifies the message within the platform. The message **must always begin with the message ID**.
+- **sid**: the subscription ID. All messages must have this field.
+- **dsid**: the ID of the datasource. All messages must have this field. Datasources are provisioned (created) when the first message with a new `dsid` is received. Then, to send data for the same datasource, you must use the same `dsid`.
+- **dev\_id**: the ID of the device. All messages must have this field. A datasource can have multiple devices (for example, for a computer, which is regarded as a datasource, you can have multiple devices, like _CPU0_, _CPU1_, _disk_c_ etc.). If you don't want to use this feature, you can use a generic device ID, like `system`
+- **timestamp**: the timestamp of the message. The timestamp can be specified as a UNIX timestamp (like the one in the example - the number of seconds since 1.01.1970) or as an ISO formatted date: `2016-09-27 18:50:07`
+- various fields of type "numeric", "counter", "inventory", "metadata", "status" or "instrument":
+  - _numeric_: a numeric field, which is processed for generating all statistics defined in the message. The field is also stored in the raw data file
+  - _counter_: a numeric field which contains the sum of the values until the current moment. When received, it is processed as a difference between this value and the previous received value. The field is also stored in the raw data file
+  - _inventory_: a general text field which is recorded as a "property" of the datasource. It can contain, for example, the host name, the OS name or version etc. The field is also stored in the raw data file
+  - _metadata_: a general text field which sets one of the following object properties: _datasource name_, _datasource description_. The field is also stored in the raw data file only if it is defined as `ds_name_log` (for setting the datasource name)
+  - _status_: a general text field which contains a status information. The possible values for this field are defined in the message definition. When received, Kronometrix calculates what percent of the time is spent for each status value. The field is also stored in the raw data file
+  - _instrument_: a numeric field, similar with the type _numeric_, but which is **not** stored in the raw data file 
+- **hash**: this field is optional (there are some messages which are defined without a hash field). It contains a hash (of type SHA256) of the entire message, without the hash field and the separator before it. The hash field must always be the last field in the message. 
+
 # Summary statistics
 
 ## List available statistics
@@ -1840,7 +1865,7 @@ The HTML code to use in your web page to embed this widget
 
 # Info
 
-## Get appliance information
+## Get data analytics platform information
 
 > Request
 
