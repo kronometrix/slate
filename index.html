@@ -1329,6 +1329,111 @@ As a general recommendation, we propose the use of characters <code class="prett
 <li><strong>hash</strong>: this field is optional (there are some messages which are defined without a hash field). It contains a hash (of type SHA256) of the entire message, without the hash field and the separator before it. The hash field must always be the last field in the message. </li>
 </ul>
 
+<h2 id="send-bulk-data">Send bulk data</h2>
+
+<blockquote>
+<p>Request</p>
+</blockquote>
+<pre class="highlight shell"><code>curl -X POST -H <span class="s2">"token: &lt;api_token&gt;"</span> -H <span class="s2">"message-id: &lt;message_id&gt;"</span> -H <span class="s2">"subscription-id: &lt;subscription_id&gt;"</span> -H <span class="s2">"datasource-id: &lt;datasource_id&gt;"</span> -H <span class="s2">"device-id: &lt;device_id&gt;"</span> -d <span class="s1">'&lt;payload&gt;'</span> <span class="s2">"http://&lt;kronomentrix_url&gt;/api/private/send_data_bulk"</span>
+</code></pre>
+<pre class="highlight php"><code><span class="cp">&lt;?php</span>
+
+<span class="nv">$request</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">HttpRequest</span><span class="p">();</span>
+<span class="nv">$request</span><span class="o">-&gt;</span><span class="na">setUrl</span><span class="p">(</span><span class="s1">'http://&lt;kronomentrix_url&gt;/api/private/send_data_bulk'</span><span class="p">);</span>
+<span class="nv">$request</span><span class="o">-&gt;</span><span class="na">setMethod</span><span class="p">(</span><span class="nx">HTTP_METH_POST</span><span class="p">);</span>
+
+<span class="nv">$request</span><span class="o">-&gt;</span><span class="na">setHeaders</span><span class="p">(</span><span class="k">array</span><span class="p">(</span>
+  <span class="s1">'device-id'</span> <span class="o">=&gt;</span> <span class="s1">'&lt;device_id&gt;'</span><span class="p">,</span>
+  <span class="s1">'datasource-id'</span> <span class="o">=&gt;</span> <span class="s1">'&lt;datasource_id&gt;'</span><span class="p">,</span>
+  <span class="s1">'subscription-id'</span> <span class="o">=&gt;</span> <span class="s1">'&lt;subscription_id&gt;'</span><span class="p">,</span>
+  <span class="s1">'message-id'</span> <span class="o">=&gt;</span> <span class="s1">'&lt;message_id&gt;'</span><span class="p">,</span>
+  <span class="s1">'token'</span> <span class="o">=&gt;</span> <span class="s1">'&lt;api_token&gt;'</span>
+<span class="p">));</span>
+
+<span class="nv">$request</span><span class="o">-&gt;</span><span class="na">setBody</span><span class="p">(</span><span class="s1">'&lt;payload&gt;'</span><span class="p">);</span>
+
+<span class="k">try</span> <span class="p">{</span>
+  <span class="nv">$response</span> <span class="o">=</span> <span class="nv">$request</span><span class="o">-&gt;</span><span class="na">send</span><span class="p">();</span>
+
+  <span class="k">echo</span> <span class="nv">$response</span><span class="o">-&gt;</span><span class="na">getBody</span><span class="p">();</span>
+<span class="p">}</span> <span class="k">catch</span> <span class="p">(</span><span class="nx">HttpException</span> <span class="nv">$ex</span><span class="p">)</span> <span class="p">{</span>
+  <span class="k">echo</span> <span class="nv">$ex</span><span class="p">;</span>
+<span class="p">}</span>
+</code></pre>
+<pre class="highlight java"><code><span class="n">OkHttpClient</span> <span class="n">client</span> <span class="o">=</span> <span class="k">new</span> <span class="n">OkHttpClient</span><span class="o">();</span>
+
+<span class="n">MediaType</span> <span class="n">mediaType</span> <span class="o">=</span> <span class="n">MediaType</span><span class="o">.</span><span class="na">parse</span><span class="o">(</span><span class="s">"application/octet-stream"</span><span class="o">);</span>
+<span class="n">RequestBody</span> <span class="n">body</span> <span class="o">=</span> <span class="n">RequestBody</span><span class="o">.</span><span class="na">create</span><span class="o">(</span><span class="n">mediaType</span><span class="o">,</span> <span class="s">"&lt;payload&gt;"</span><span class="o">);</span>
+<span class="n">Request</span> <span class="n">request</span> <span class="o">=</span> <span class="k">new</span> <span class="n">Request</span><span class="o">.</span><span class="na">Builder</span><span class="o">()</span>
+  <span class="o">.</span><span class="na">url</span><span class="o">(</span><span class="s">"http://&lt;kronomentrix_url&gt;/api/private/send_data_bulk"</span><span class="o">)</span>
+  <span class="o">.</span><span class="na">post</span><span class="o">(</span><span class="n">body</span><span class="o">)</span>
+  <span class="o">.</span><span class="na">addHeader</span><span class="o">(</span><span class="s">"token"</span><span class="o">,</span> <span class="s">"&lt;api_token&gt;"</span><span class="o">)</span>
+  <span class="o">.</span><span class="na">addHeader</span><span class="o">(</span><span class="s">"message-id"</span><span class="o">,</span> <span class="s">"&lt;message_id&gt;"</span><span class="o">)</span>
+  <span class="o">.</span><span class="na">addHeader</span><span class="o">(</span><span class="s">"subscription-id"</span><span class="o">,</span> <span class="s">"subscription_id"</span><span class="o">)</span>
+  <span class="o">.</span><span class="na">addHeader</span><span class="o">(</span><span class="s">"datasource-id"</span><span class="o">,</span> <span class="s">"datasource_id"</span><span class="o">)</span>
+  <span class="o">.</span><span class="na">addHeader</span><span class="o">(</span><span class="s">"device-id"</span><span class="o">,</span> <span class="s">"device_id"</span><span class="o">)</span>
+  <span class="o">.</span><span class="na">build</span><span class="o">();</span>
+
+<span class="n">Response</span> <span class="n">response</span> <span class="o">=</span> <span class="n">client</span><span class="o">.</span><span class="na">newCall</span><span class="o">(</span><span class="n">request</span><span class="o">).</span><span class="na">execute</span><span class="o">();</span>
+</code></pre>
+
+<blockquote>
+<p>Response</p>
+</blockquote>
+<pre class="highlight html"><code>OK
+</code></pre>
+
+<p>This is the API call through which bulk data enter Kronometrix. Bulk data is the kind of generic data that is stored in Kronometrix as a file (raw data file), but <strong>it is not parsed in any way</strong>. This can be useful for uploading log dumps, binary data (e.g. images) or any other kind of big data.
+This API call <strong>supports only token-based authentication</strong>!</p>
+
+<h3 id="request">Request</h3>
+
+<p><code class="prettyprint">http://&lt;kronometrix_url&gt;/api/private/send_data_bulk</code></p>
+
+<table><thead>
+<tr>
+<th>Header field</th>
+<th>Details</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>token</td>
+<td>The API Token to be used for authentication</td>
+</tr>
+<tr>
+<td>message-id</td>
+<td>The ID of the message; this message must be defined as <code class="prettyprint">type=&quot;bulk&quot;</code> in the LMO</td>
+</tr>
+<tr>
+<td>subscription-id</td>
+<td>The ID of the subscription</td>
+</tr>
+<tr>
+<td>datasource-id</td>
+<td>The ID of the datasource</td>
+</tr>
+<tr>
+<td>device-id</td>
+<td>The ID of the device</td>
+</tr>
+<tr>
+<td>hash</td>
+<td>An <em>sha256</em> hash of the payload (<em>optional</em>)</td>
+</tr>
+</tbody></table>
+
+<h3 id="response">Response</h3>
+
+<p>The text <code class="prettyprint">OK</code> in case of success (with HTTP code <code class="prettyprint">200 OK</code>), or a text describing the error in case another HTTP code is received (thus denoting a failure).</p>
+
+<h3 id="general-considerations">General considerations</h3>
+
+<ul>
+<li>all the <strong>header</strong> fields, except &ldquo;hash&rdquo;, are <strong>required</strong></li>
+<li>the <strong>body</strong> of the request contains the <strong>payload</strong>; the size of the payload can be limited in the LMO (<code class="prettyprint">request-max-size</code>)</li>
+<li>the LMO field <code class="prettyprint">content-storage</code> defines if the latest payload received will overwrite the older content or it will be appended</li>
+</ul>
+
 <h1 id="summary-statistics">Summary statistics</h1>
 
 <h2 id="list-available-statistics">List available statistics</h2>
