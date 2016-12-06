@@ -1059,6 +1059,91 @@ A message is composed of the following fields:
   - _instrument_: a numeric field, similar with the type _numeric_, but which is **not** stored in the raw data file 
 - **hash**: this field is optional (there are some messages which are defined without a hash field). It contains a hash (of type SHA256) of the entire message, without the hash field and the separator before it. The hash field must always be the last field in the message. 
 
+## Send bulk data
+
+> Request
+
+```shell
+curl -X POST -H "token: <api_token>" -H "message-id: <message_id>" -H "subscription-id: <subscription_id>" -H "datasource-id: <datasource_id>" -H "device-id: <device_id>" -d '<payload>' "http://<kronomentrix_url>/api/private/send_data_bulk"
+```
+
+```php
+<?php
+
+$request = new HttpRequest();
+$request->setUrl('http://<kronomentrix_url>/api/private/send_data_bulk');
+$request->setMethod(HTTP_METH_POST);
+
+$request->setHeaders(array(
+  'device-id' => '<device_id>',
+  'datasource-id' => '<datasource_id>',
+  'subscription-id' => '<subscription_id>',
+  'message-id' => '<message_id>',
+  'token' => '<api_token>'
+));
+
+$request->setBody('<payload>');
+
+try {
+  $response = $request->send();
+
+  echo $response->getBody();
+} catch (HttpException $ex) {
+  echo $ex;
+}
+```
+
+```java
+OkHttpClient client = new OkHttpClient();
+
+MediaType mediaType = MediaType.parse("application/octet-stream");
+RequestBody body = RequestBody.create(mediaType, "<payload>");
+Request request = new Request.Builder()
+  .url("http://<kronomentrix_url>/api/private/send_data_bulk")
+  .post(body)
+  .addHeader("token", "<api_token>")
+  .addHeader("message-id", "<message_id>")
+  .addHeader("subscription-id", "subscription_id")
+  .addHeader("datasource-id", "datasource_id")
+  .addHeader("device-id", "device_id")
+  .build();
+
+Response response = client.newCall(request).execute();
+```
+
+> Response
+
+```html
+OK
+```
+
+This is the API call through which bulk data enter Kronometrix. Bulk data is the kind of generic data that is stored in Kronometrix as a file (raw data file), but **it is not parsed in any way**. This can be useful for uploading log dumps, binary data (e.g. images) or any other kind of big data.
+This API call **supports only token-based authentication**!
+
+### Request
+
+`http://<kronometrix_url>/api/private/send_data_bulk`
+
+Header field | Details
+--------- | -------
+token           | The API Token to be used for authentication
+message-id      | The ID of the message; this message must be defined as `type="bulk"` in the LMO
+subscription-id | The ID of the subscription
+datasource-id   | The ID of the datasource
+device-id       | The ID of the device
+hash            | An *sha256* hash of the payload (_optional_)
+
+
+### Response
+
+The text `OK` in case of success (with HTTP code `200 OK`), or a text describing the error in case another HTTP code is received (thus denoting a failure).
+
+### General considerations
+
+- all the **header** fields, except "hash", are **required**
+- the **body** of the request contains the **payload**; the size of the payload can be limited in the LMO (`request-max-size`)
+- the LMO field `content-storage` defines if the latest payload received will overwrite the older content or it will be appended
+
 # Summary statistics
 
 ## List available statistics
