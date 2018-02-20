@@ -1319,7 +1319,7 @@ This endpoint lists the available summary statistics functions available in Kron
 
 ### Request
 
-`http://<kronometrix_url>/api/get_kinfo`
+`http://<kronometrix_url>/api/get_stats`
 
 *No parameters needed*
 
