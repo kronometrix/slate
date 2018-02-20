@@ -21,6 +21,8 @@ This is the place where you will find details about the accessible API provided 
 
 The Kronometrix API can be accessed over HTTP, using standard POST requests.
 
+Version: *February 2018*
+
 # Accessing the API
 
 > HTTP POST Request:
@@ -1146,21 +1148,21 @@ The text `OK` in case of success (with HTTP code `200 OK`), or a text describing
 
 # Summary statistics
 
-## List available statistics
+## List message statistics
 
 ```shell
 curl -X POST -H "Token: <api_token>" -d '{
     "params": {
         "message": "<message_id>"
     }
-}' "http://<kronometrix_url>/api/get_stats"
+}' "http://<kronometrix_url>/api/get_msg_stats"
 ```
 
 ```php
 <?php
 
 $request = new HttpRequest();
-$request->setUrl('http://<kronometrix_url>/api/get_stats');
+$request->setUrl('http://<kronometrix_url>/api/get_msg_stats');
 $request->setMethod(HTTP_METH_POST);
 
 $request->setHeaders(array(
@@ -1188,7 +1190,7 @@ OkHttpClient client = new OkHttpClient();
 MediaType mediaType = MediaType.parse("application/octet-stream");
 RequestBody body = RequestBody.create(mediaType, "{\n    \"params\": {\n        \"message\": \"<message_id>\"\n    }\n}");
 Request request = new Request.Builder()
-  .url("http://<kronometrix_url>/api/get_stats")
+  .url("http://<kronometrix_url>/api/get_msg_stats")
   .post(body)
   .addHeader("token", "<api_token>")
   .build();
@@ -1229,7 +1231,7 @@ This endpoint lists the available statistics with intervals for a certain messag
 
 ### Request
 
-`http://<kronometrix_url>/api/get_stats`
+`http://<kronometrix_url>/api/get_msg_stats`
 
 Parameter | Details
 --------- | -------
@@ -1244,6 +1246,93 @@ Field | Details
 monitoring_object | The ID of the monitoring object
 message | The message ID (same with the "message" parameter sent)
 stats | An array of objects, each object (hash-table) having these fields: "name" = parameter name; "functions" = an array of functions (hash table).<br/>Each element of the "functions" hash has the aggregation function as key ("MIN", "MAX", "SUM", "COUNT", "LAST", "PERCENTILE") and an array of intervals as value.<br/>Each interval is an array of 2 elements, first element representing the interval width in seconds, and the second element representing the resolution in seconds.
+
+## List summary statistics functions
+
+> Request
+
+```shell
+curl -X POST -H "Token: <api_token>" "http://<kronomentrix_url>/api/get_stats"
+```
+
+```php
+<?php
+
+$request = new HttpRequest();
+$request->setUrl('http://<kronomentrix_url>/api/get_stats');
+$request->setMethod(HTTP_METH_POST);
+
+$request->setHeaders(array(
+  'token' => '<api_token>'
+));
+
+try {
+  $response = $request->send();
+
+  echo $response->getBody();
+} catch (HttpException $ex) {
+  echo $ex;
+}
+```
+
+```java
+OkHttpClient client = new OkHttpClient();
+
+MediaType mediaType = MediaType.parse("application/octet-stream");
+Request request = new Request.Builder()
+  .url("http://<kronomentrix_url>/api/get_stats")
+  .post(null)
+  .addHeader("token", "<api_token>")
+  .build();
+
+Response response = client.newCall(request).execute();
+```
+
+> Response
+
+```json
+{
+    "name": "The Library of Summary Statistics Functions",
+    "description": "Includes Kronometrix summary statistics functions",
+    "id": "libssf",
+    "functions": {
+        "MIN": {
+            "id": "MIN",
+            "description": "...",
+            "formats": [
+                {
+                    "format": "MIN([x1, x2, ...])",
+                    "description": "Returns the minimum value from the array"
+                },
+                {
+                    "format": "MIN([x1, x2, ...], [y1, y2, ...], ...)",
+                    "description": "Returns the minimum value from all the arrays received as parameters"
+                }
+            ]
+        },
+        ...
+    }
+}
+```
+
+This endpoint lists the available summary statistics functions available in Kronometrix.
+
+### Request
+
+`http://<kronometrix_url>/api/get_kinfo`
+
+*No parameters needed*
+
+### Response
+
+A JSON-encoded hash describing the statistics functions library, with the following fields:
+
+Field | Details
+----- | -------
+name | The name of the library
+description | A short description of the library
+id | An internal library ID
+functions | A hash of objects, each object (hash-table) having these fields: "id" = the ID of the function; "description" = a short description of the function; "formats" = an array with the available function formats
 
 ## Get statistical data
 
@@ -1995,47 +2084,47 @@ Response response = client.newCall(request).execute();
 
 ```json
 [
-  {
-    "Type": "Kx"
-  },
-  {
-    "Version": "1.3.2"
-  },
-  {
-    "Platform": "x64"
-  },
-  {
-    "Last Updated": "NA"
-  },
-  {
-    "API": "1.0.0"
-  },
-  {
-    "Modules": [
-      "authenticator: kauth 1.3.2",
-      "kernel: kkernel 1.3.2",
-      "messenger: kmesg 1.3.2",
-      "monitor: kmon 1.3.1.1"
-    ]
-  },
-  {
-    "ID": "NA"
-  },
-  {
-    "Manufactured": "Mon Feb 22 14:53:22 UTC 2016"
-  },
-  {
-    "Vendor": "SDR Dynamics, Helsinki, Finland"
-  },
-  {
-    "Registrant": "NA"
-  },
-  {
-    "Email": "NA"
-  },
-  {
-    "License": "NA"
-  }
+    {
+        "Type": "K500"
+    },
+    {
+        "ID": "NA"
+    },
+    {
+        "Version": "1.6.4"
+    },
+    {
+        "Architecture": "x64"
+    },
+    {
+        "Name": "K500 Development"
+    },
+    {
+        "Last Updated": "NA"
+    },
+    {
+        "Modules": [
+            "authenticator: kauth 1.6.4",
+            "kernel: kkernel 1.6.4",
+            "messenger: kmesg 1.6.4",
+            "monitor: kmon 1.6.4"
+        ]
+    },
+    {
+        "Manufactured": "Mon Jul 24 12:10:18 UTC 2017"
+    },
+    {
+        "Vendor": "SDR Dynamics, Helsinki, Finland"
+    },
+    {
+        "Registrant": "NA"
+    },
+    {
+        "Email": "NA"
+    },
+    {
+        "License": "NA"
+    }
 ]
 ```
 
