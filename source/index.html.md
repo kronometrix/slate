@@ -7,6 +7,7 @@ language_tabs:
   - java
 
 toc_footers:
+  - API ver. 1.3
   - <a href='http://kronometrix.io'>Sign Up for a Developer Key</a>
   - <a href='https://github.com/tripit/slate'>Documentation Powered by Slate</a>
 
@@ -20,8 +21,6 @@ search: true
 This is the place where you will find details about the accessible API provided by Kronometrix for its users.
 
 The Kronometrix API can be accessed over HTTP, using standard POST requests.
-
-Version: *February 2018*
 
 # Accessing the API
 
