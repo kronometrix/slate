@@ -1244,7 +1244,7 @@ Field | Details
 ----- | -------
 monitoring_object | The ID of the monitoring object
 message | The message ID (same with the "message" parameter sent)
-stats | An array of objects, each object (hash-table) having these fields: "name" = parameter name; "functions" = an array of functions (hash table).<br/>Each element of the "functions" hash has the aggregation function as key ("MIN", "MAX", "SUM", "COUNT", "LAST", "PERCENTILE") and an array of intervals as value.<br/>Each interval is an array of 2 elements, first element representing the interval width in seconds, and the second element representing the resolution in seconds.
+stats | An array of objects, each object (hash-table) having these fields: "name" = parameter name; "functions" = an array of functions (hash table).<br/>Each element of the "functions" hash has the aggregation function ID as key ("MIN", "MAX", "SUM", "COUNT", "LAST", "PERCENTILE") and an array of intervals as value.<br/>Each interval is an array of 2 elements, first element representing the interval width in seconds, and the second element representing the resolution in seconds.
 
 ## List summary statistics functions
 
@@ -1295,23 +1295,25 @@ Response response = client.newCall(request).execute();
     "description": "Includes Kronometrix summary statistics functions",
     "id": "libssf",
     "functions": {
-        "MIN": {
-            "id": "MIN",
-            "description": "...",
-            "formats": [
-                {
-                    "format": "MIN([x1, x2, ...])",
-                    "description": "Returns the minimum value from the array"
-                },
-                {
-                    "format": "MIN([x1, x2, ...], [y1, y2, ...], ...)",
-                    "description": "Returns the minimum value from all the arrays received as parameters"
-                }
-            ]
-        },
-        ...
+      "MIN": {
+        "name": "Min",
+        "id": "MIN",
+        "description": "Minimum value",
+        "formats": [
+          { "format": "Min([x1, x2, ...])", "description": "Returns the minimum value from the array" }
+        ]
+      },
+      "MAX": {
+        "name": "Max",
+        "id": "MAX",
+        "description": "Maximum value",
+        "formats": [
+          { "format": "Max([x1, x2, ...])", "description": "Returns the maximum value from the array" }
+        ]
+      },
+      ...
     }
-}
+  }
 ```
 
 This endpoint lists the available summary statistics functions available in Kronometrix.
@@ -1331,7 +1333,7 @@ Field | Details
 name | The name of the library
 description | A short description of the library
 id | An internal library ID
-functions | A hash of objects, each object (hash-table) having these fields: "id" = the ID of the function; "description" = a short description of the function; "formats" = an array with the available function formats
+functions | A hash of objects, each object (hash-table) having these fields: "id" = the ID of the function; "name" = the name (definition) of the function; "description" = a short description of the function; "formats" = an array with the available function formats
 
 ## Get statistical data
 
