@@ -1548,7 +1548,7 @@ This API call <strong>supports only token-based authentication</strong>!</p>
 </tr>
 <tr>
 <td>stats</td>
-<td>An array of objects, each object (hash-table) having these fields: &ldquo;name&rdquo; = parameter name; &ldquo;functions&rdquo; = an array of functions (hash table).<br/>Each element of the &ldquo;functions&rdquo; hash has the aggregation function as key (&ldquo;MIN&rdquo;, &ldquo;MAX&rdquo;, &ldquo;SUM&rdquo;, &ldquo;COUNT&rdquo;, &ldquo;LAST&rdquo;, &ldquo;PERCENTILE&rdquo;) and an array of intervals as value.<br/>Each interval is an array of 2 elements, first element representing the interval width in seconds, and the second element representing the resolution in seconds.</td>
+<td>An array of objects, each object (hash-table) having these fields: &ldquo;name&rdquo; = parameter name; &ldquo;functions&rdquo; = an array of functions (hash table).<br/>Each element of the &ldquo;functions&rdquo; hash has the aggregation function ID as key (&ldquo;MIN&rdquo;, &ldquo;MAX&rdquo;, &ldquo;SUM&rdquo;, &ldquo;COUNT&rdquo;, &ldquo;LAST&rdquo;, &ldquo;PERCENTILE&rdquo;) and an array of intervals as value.<br/>Each interval is an array of 2 elements, first element representing the interval width in seconds, and the second element representing the resolution in seconds.</td>
 </tr>
 </tbody></table>
 
@@ -1597,23 +1597,25 @@ This API call <strong>supports only token-based authentication</strong>!</p>
     </span><span class="nt">"description"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Includes Kronometrix summary statistics functions"</span><span class="p">,</span><span class="w">
     </span><span class="nt">"id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"libssf"</span><span class="p">,</span><span class="w">
     </span><span class="nt">"functions"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-        </span><span class="nt">"MIN"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-            </span><span class="nt">"id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"MIN"</span><span class="p">,</span><span class="w">
-            </span><span class="nt">"description"</span><span class="p">:</span><span class="w"> </span><span class="s2">"..."</span><span class="p">,</span><span class="w">
-            </span><span class="nt">"formats"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
-                </span><span class="p">{</span><span class="w">
-                    </span><span class="nt">"format"</span><span class="p">:</span><span class="w"> </span><span class="s2">"MIN([x1, x2, ...])"</span><span class="p">,</span><span class="w">
-                    </span><span class="nt">"description"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Returns the minimum value from the array"</span><span class="w">
-                </span><span class="p">},</span><span class="w">
-                </span><span class="p">{</span><span class="w">
-                    </span><span class="nt">"format"</span><span class="p">:</span><span class="w"> </span><span class="s2">"MIN([x1, x2, ...], [y1, y2, ...], ...)"</span><span class="p">,</span><span class="w">
-                    </span><span class="nt">"description"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Returns the minimum value from all the arrays received as parameters"</span><span class="w">
-                </span><span class="p">}</span><span class="w">
-            </span><span class="p">]</span><span class="w">
-        </span><span class="p">},</span><span class="w">
-        </span><span class="err">...</span><span class="w">
+      </span><span class="nt">"MIN"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+        </span><span class="nt">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Min"</span><span class="p">,</span><span class="w">
+        </span><span class="nt">"id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"MIN"</span><span class="p">,</span><span class="w">
+        </span><span class="nt">"description"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Minimum value"</span><span class="p">,</span><span class="w">
+        </span><span class="nt">"formats"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+          </span><span class="p">{</span><span class="w"> </span><span class="nt">"format"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Min([x1, x2, ...])"</span><span class="p">,</span><span class="w"> </span><span class="nt">"description"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Returns the minimum value from the array"</span><span class="w"> </span><span class="p">}</span><span class="w">
+        </span><span class="p">]</span><span class="w">
+      </span><span class="p">},</span><span class="w">
+      </span><span class="nt">"MAX"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+        </span><span class="nt">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Max"</span><span class="p">,</span><span class="w">
+        </span><span class="nt">"id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"MAX"</span><span class="p">,</span><span class="w">
+        </span><span class="nt">"description"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Maximum value"</span><span class="p">,</span><span class="w">
+        </span><span class="nt">"formats"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+          </span><span class="p">{</span><span class="w"> </span><span class="nt">"format"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Max([x1, x2, ...])"</span><span class="p">,</span><span class="w"> </span><span class="nt">"description"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Returns the maximum value from the array"</span><span class="w"> </span><span class="p">}</span><span class="w">
+        </span><span class="p">]</span><span class="w">
+      </span><span class="p">},</span><span class="w">
+      </span><span class="err">...</span><span class="w">
     </span><span class="err">}</span><span class="w">
-</span><span class="p">}</span><span class="w">
+  </span><span class="p">}</span><span class="w">
 </span></code></pre>
 
 <p>This endpoint lists the available summary statistics functions available in Kronometrix.</p>
@@ -1648,7 +1650,7 @@ This API call <strong>supports only token-based authentication</strong>!</p>
 </tr>
 <tr>
 <td>functions</td>
-<td>A hash of objects, each object (hash-table) having these fields: &ldquo;id&rdquo; = the ID of the function; &ldquo;description&rdquo; = a short description of the function; &ldquo;formats&rdquo; = an array with the available function formats</td>
+<td>A hash of objects, each object (hash-table) having these fields: &ldquo;id&rdquo; = the ID of the function; &ldquo;name&rdquo; = the name (definition) of the function; &ldquo;description&rdquo; = a short description of the function; &ldquo;formats&rdquo; = an array with the available function formats</td>
 </tr>
 </tbody></table>
 
