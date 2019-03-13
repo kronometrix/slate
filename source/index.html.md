@@ -20,7 +20,7 @@ search: true
 
 This is the place where you will find details about the accessible API provided by Kronometrix for its users.
 
-The Kronometrix API can be accessed over HTTP, using standard POST requests.
+The Kronometrix API can be accessed over HTTP or HTTPS, using standard POST requests. The examples in this documentation will use standard HTTP, but using HTTPS should be straightforward.
 
 # Accessing the API
 
