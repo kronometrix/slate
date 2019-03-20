@@ -380,6 +380,143 @@
 
 <p>If the token didn&rsquo;t exist, it will still appear as if it has been deleted (so you will get no error from trying to delete an inexistent token)</p>
 
+<h2 id="create-new-user">Create new user</h2>
+
+<blockquote>
+<p>Request</p>
+</blockquote>
+<pre class="highlight shell"><code>curl -X POST -d <span class="s1">'{
+    "params": {
+        "username": "&lt;new_username&gt;",
+        "email": "&lt;new_user_email&gt;",
+        "first_name": "&lt;new_user_first_name&gt;",
+        "last_name": "&lt;new_user_last_name&gt;",
+        "company": "&lt;new_user_company&gt;",
+        "country": "&lt;new_user_countrycode&gt;"
+    }
+}'</span> <span class="s2">"http://&lt;kronomentrix_url&gt;/api/create_user"</span>
+</code></pre>
+<pre class="highlight php"><code><span class="cp">&lt;?php</span>
+
+<span class="nv">$request</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">HttpRequest</span><span class="p">();</span>
+<span class="nv">$request</span><span class="o">-&gt;</span><span class="na">setUrl</span><span class="p">(</span><span class="s1">'http://&lt;kronomentrix_url&gt;/api/create_user'</span><span class="p">);</span>
+<span class="nv">$request</span><span class="o">-&gt;</span><span class="na">setMethod</span><span class="p">(</span><span class="nx">HTTP_METH_POST</span><span class="p">);</span>
+
+<span class="nv">$request</span><span class="o">-&gt;</span><span class="na">setBody</span><span class="p">(</span><span class="s1">'{
+    "params": {
+        "username": "&lt;new_username&gt;",
+        "email": "&lt;new_user_email&gt;",
+        "first_name": "&lt;new_user_first_name&gt;",
+        "last_name": "&lt;new_user_last_name&gt;",
+        "company": "&lt;new_user_company&gt;",
+        "country": "&lt;new_user_countrycode&gt;"
+    }
+}'</span><span class="p">);</span>
+
+<span class="k">try</span> <span class="p">{</span>
+  <span class="nv">$response</span> <span class="o">=</span> <span class="nv">$request</span><span class="o">-&gt;</span><span class="na">send</span><span class="p">();</span>
+
+  <span class="k">echo</span> <span class="nv">$response</span><span class="o">-&gt;</span><span class="na">getBody</span><span class="p">();</span>
+<span class="p">}</span> <span class="k">catch</span> <span class="p">(</span><span class="nx">HttpException</span> <span class="nv">$ex</span><span class="p">)</span> <span class="p">{</span>
+  <span class="k">echo</span> <span class="nv">$ex</span><span class="p">;</span>
+<span class="p">}</span>
+</code></pre>
+<pre class="highlight java"><code><span class="n">OkHttpClient</span> <span class="n">client</span> <span class="o">=</span> <span class="k">new</span> <span class="n">OkHttpClient</span><span class="o">();</span>
+
+<span class="n">MediaType</span> <span class="n">mediaType</span> <span class="o">=</span> <span class="n">MediaType</span><span class="o">.</span><span class="na">parse</span><span class="o">(</span><span class="s">"application/octet-stream"</span><span class="o">);</span>
+<span class="n">RequestBody</span> <span class="n">body</span> <span class="o">=</span> <span class="n">RequestBody</span><span class="o">.</span><span class="na">create</span><span class="o">(</span><span class="n">mediaType</span><span class="o">,</span> <span class="s">"{\n \"params\": {\n \"username\": \"&lt;new_username&gt;\",\n \"email\": \"&lt;new_email&gt;\",\n \"first_name\": \"&lt;new_first_name&gt;\",\n \"last_name\": \"&lt;new_last_name&gt;\",\n \"company\": \"&lt;new_company&gt;\",\n \"country\": \"&lt;new_country_code&gt;\"\n}\n}"</span><span class="o">);</span>
+<span class="n">Request</span> <span class="n">request</span> <span class="o">=</span> <span class="k">new</span> <span class="n">Request</span><span class="o">.</span><span class="na">Builder</span><span class="o">()</span>
+  <span class="o">.</span><span class="na">url</span><span class="o">(</span><span class="s">"http://&lt;kronomentrix_url&gt;/api/create_user"</span><span class="o">)</span>
+  <span class="o">.</span><span class="na">post</span><span class="o">(</span><span class="n">body</span><span class="o">)</span>
+  <span class="o">.</span><span class="na">build</span><span class="o">();</span>
+
+<span class="n">Response</span> <span class="n">response</span> <span class="o">=</span> <span class="n">client</span><span class="o">.</span><span class="na">newCall</span><span class="o">(</span><span class="n">request</span><span class="o">).</span><span class="na">execute</span><span class="o">();</span>
+</code></pre>
+
+<blockquote>
+<p>Response</p>
+</blockquote>
+<pre class="highlight html"><code>OK
+</code></pre>
+
+<p>You can create a new user using the following API call:</p>
+
+<h3 id="request">Request</h3>
+
+<p><code class="prettyprint">http://&lt;kronometrix_url&gt;/api/create_user</code></p>
+
+<table><thead>
+<tr>
+<th>Parameter</th>
+<th>Details</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>username</td>
+<td>The username of the new user</td>
+</tr>
+<tr>
+<td>email</td>
+<td>The e-mail address of the new user</td>
+</tr>
+<tr>
+<td>first_name</td>
+<td>The new user&rsquo;s first name</td>
+</tr>
+<tr>
+<td>last_name</td>
+<td>The new user&rsquo;s last name</td>
+</tr>
+<tr>
+<td>company</td>
+<td>The new user&rsquo;s company</td>
+</tr>
+<tr>
+<td>phone</td>
+<td>The new user&rsquo;s phone number (optional)</td>
+</tr>
+<tr>
+<td>title</td>
+<td>The new user&rsquo;s title (optional)</td>
+</tr>
+<tr>
+<td>address</td>
+<td>The new user&rsquo;s address (optional)</td>
+</tr>
+<tr>
+<td>city</td>
+<td>The new user&rsquo;s city (optional)</td>
+</tr>
+<tr>
+<td>postalcode</td>
+<td>The new user&rsquo;s postal code (optional)</td>
+</tr>
+<tr>
+<td>country</td>
+<td>The country 2-letters code with capital letters (ex: <code class="prettyprint">BS</code> for Bahamas)</td>
+</tr>
+</tbody></table>
+
+<h3 id="response">Response</h3>
+
+<p>The text <code class="prettyprint">OK</code> in case of success (with HTTP code <code class="prettyprint">200 OK</code>), or a JSON structure describing the error in case another HTTP code is received (thus denoting a failure):</p>
+
+<table><thead>
+<tr>
+<th>Field</th>
+<th>Details</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>error</td>
+<td>The error message</td>
+</tr>
+</tbody></table>
+
+<aside class="info">
+Please note that this API endpoint <b>doesn&rsquo;t need an authentication token</b>. This is the only API call which doesn&rsquo;t require authentication.
+</aside>
+
 <h1 id="provisioning">Provisioning</h1>
 
 <h2 id="list-subscriptions">List subscriptions</h2>
