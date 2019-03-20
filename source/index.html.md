@@ -248,6 +248,101 @@ removed | The deleted API Token
 
 If the token didn't exist, it will still appear as if it has been deleted (so you will get no error from trying to delete an inexistent token)
 
+## Create new user
+
+> Request
+
+```shell
+curl -X POST -d '{
+    "params": {
+        "username": "<new_username>",
+        "email": "<new_user_email>",
+        "first_name": "<new_user_first_name>",
+        "last_name": "<new_user_last_name>",
+        "company": "<new_user_company>",
+        "country": "<new_user_countrycode>"
+    }
+}' "http://<kronomentrix_url>/api/create_user"
+```
+
+```php
+<?php
+
+$request = new HttpRequest();
+$request->setUrl('http://<kronomentrix_url>/api/create_user');
+$request->setMethod(HTTP_METH_POST);
+
+$request->setBody('{
+    "params": {
+        "username": "<new_username>",
+        "email": "<new_user_email>",
+        "first_name": "<new_user_first_name>",
+        "last_name": "<new_user_last_name>",
+        "company": "<new_user_company>",
+        "country": "<new_user_countrycode>"
+    }
+}');
+
+try {
+  $response = $request->send();
+
+  echo $response->getBody();
+} catch (HttpException $ex) {
+  echo $ex;
+}
+```
+
+```java
+OkHttpClient client = new OkHttpClient();
+
+MediaType mediaType = MediaType.parse("application/octet-stream");
+RequestBody body = RequestBody.create(mediaType, "{\n \"params\": {\n \"username\": \"<new_username>\",\n \"email\": \"<new_email>\",\n \"first_name\": \"<new_first_name>\",\n \"last_name\": \"<new_last_name>\",\n \"company\": \"<new_company>\",\n \"country\": \"<new_country_code>\"\n}\n}");
+Request request = new Request.Builder()
+  .url("http://<kronomentrix_url>/api/create_user")
+  .post(body)
+  .build();
+
+Response response = client.newCall(request).execute();
+```
+
+> Response
+
+```html
+OK
+```
+
+You can create a new user using the following API call:
+
+### Request
+
+`http://<kronometrix_url>/api/create_user`
+
+Parameter | Details
+--------- | -------
+username | The username of the new user
+email | The e-mail address of the new user
+first_name | The new user's first name
+last_name | The new user's last name
+company | The new user's company
+phone | The new user's phone number (optional)
+title | The new user's title (optional)
+address | The new user's address (optional)
+city | The new user's city (optional)
+postalcode | The new user's postal code (optional)
+country | The country 2-letters code with capital letters (ex: `BS` for Bahamas)
+
+### Response
+
+The text `OK` in case of success (with HTTP code `200 OK`), or a JSON structure describing the error in case another HTTP code is received (thus denoting a failure):
+
+Field | Details
+----- | -------
+error | The error message
+
+<aside class="info">
+Please note that this API endpoint <b>doesn't need an authentication token</b>. This is the only API call which doesn't require authentication.
+</aside>
+
 # Provisioning
 
 ## List subscriptions
