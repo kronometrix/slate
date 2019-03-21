@@ -255,12 +255,12 @@ If the token didn't exist, it will still appear as if it has been deleted (so yo
 ```shell
 curl -X POST -d '{
     "params": {
-        "username": "<new_username>",
-        "email": "<new_user_email>",
-        "first_name": "<new_user_first_name>",
-        "last_name": "<new_user_last_name>",
-        "company": "<new_user_company>",
-        "country": "<new_user_countrycode>"
+        "username": "johndoe",
+        "email": "johndoe@gmail.com",
+        "first_name": "John",
+        "last_name": "Doe",
+        "company": "ACME",
+        "country": "BS"
     }
 }' "http://<kronomentrix_url>/api/create_user"
 ```
@@ -274,12 +274,12 @@ $request->setMethod(HTTP_METH_POST);
 
 $request->setBody('{
     "params": {
-        "username": "<new_username>",
-        "email": "<new_user_email>",
-        "first_name": "<new_user_first_name>",
-        "last_name": "<new_user_last_name>",
-        "company": "<new_user_company>",
-        "country": "<new_user_countrycode>"
+        "username": "johndoe",
+        "email": "johndoe@gmail.com",
+        "first_name": "John",
+        "last_name": "Doe",
+        "company": "ACME",
+        "country": "BS"
     }
 }');
 
@@ -296,7 +296,7 @@ try {
 OkHttpClient client = new OkHttpClient();
 
 MediaType mediaType = MediaType.parse("application/octet-stream");
-RequestBody body = RequestBody.create(mediaType, "{\n \"params\": {\n \"username\": \"<new_username>\",\n \"email\": \"<new_email>\",\n \"first_name\": \"<new_first_name>\",\n \"last_name\": \"<new_last_name>\",\n \"company\": \"<new_company>\",\n \"country\": \"<new_country_code>\"\n}\n}");
+RequestBody body = RequestBody.create(mediaType, "{\n \"params\": {\n \"username\": \"johndoe\",\n \"email\": \"johndoe@gmail.com\",\n \"first_name\": \"John\",\n \"last_name\": \"Doe\",\n \"company\": \"ACME\",\n \"country\": \"BS\"\n}\n}");
 Request request = new Request.Builder()
   .url("http://<kronomentrix_url>/api/create_user")
   .post(body)
@@ -1053,6 +1053,186 @@ dsid | The ID of the datasource
 ### Response
 
 A JSON-encoded hash table, with each key representing a device ID, and the corresponding value consisting of an array of message names for that device.
+
+## Add an user to a subscription
+
+> Request
+
+```shell
+curl -X POST -H "Token: <api_token>" -d '{
+    "params": {
+        "sid": "9ee583c7d0a8b314c947dccfdcd922ca",
+        "email": "test@gmail.com",
+        "name": "John Doe",
+        "role": "viewer",
+        "ds_groups": ["5cc0a6701281b08e1f1733aaa6d4a41d"]
+    }
+}' "http://<kronomentrix_url>/api/adduser_subscription"
+```
+
+```php
+<?php
+
+$request = new HttpRequest();
+$request->setUrl('http://<kronomentrix_url>/api/adduser_subscription');
+$request->setMethod(HTTP_METH_POST);
+
+$request->setHeaders(array(
+  'token' => '<api_token>'
+));
+
+$request->setBody('{
+    "params": {
+        "sid": "9ee583c7d0a8b314c947dccfdcd922ca",
+        "email": "test@gmail.com",
+        "name": "John Doe",
+        "role": "viewer",
+        "ds_groups": ["5cc0a6701281b08e1f1733aaa6d4a41d"]
+    }
+}');
+
+try {
+  $response = $request->send();
+
+  echo $response->getBody();
+} catch (HttpException $ex) {
+  echo $ex;
+}
+```
+
+```java
+OkHttpClient client = new OkHttpClient();
+
+MediaType mediaType = MediaType.parse("application/octet-stream");
+RequestBody body = RequestBody.create(mediaType, "{\n    \"params\": {\n \"sid\": \"9ee583c7d0a8b314c947dccfdcd922ca\", \"email\": \"test@gmail.com\", \"name\": \"John Doe\", \"role\": \"viewer\", \"ds_groups\": [\"5cc0a6701281b08e1f1733aaa6d4a41d\"] }\n}");
+Request request = new Request.Builder()
+  .url("http://<kronomentrix_url>/api/adduser_subscription")
+  .post(body)
+  .addHeader("token", "<api_token>")
+  .build();
+
+Response response = client.newCall(request).execute();
+```
+
+> Response
+
+```json
+{
+    "added": "Existing user has been added"
+}
+```
+
+This endpoint allows a subscription admin or owner to allow access to another user (existing in Kronometrix, or a completely new user). 
+
+### Request
+
+`http://<kronometrix_url>/api/adduser_subscription`
+
+Parameter | Details
+--------- | -------
+sid | The ID of the subscription to allow access to
+email | The email address of the user to be added
+name | The name of the user to be added; used for communication with the user if he will be invited to Kronometrix
+role | The role given to the user for this subscription; can be "owner", "admin", "provider", "viewer"
+ds_groups | An array of datasource groups IDs to give access to, if the role is "provider" or "viewer". A special value `all_ds` can be used to specify all datasources of the subscription
+
+### Response
+
+A JSON-encoded structure representing the result of the operation or an error if the operation fails
+
+Field | Details
+----- | -------
+added | A text message specifying if the user exists in Kronometrix or it has been invited
+ | *or*
+error | A text describing the error
+
+## Remove an user from a subscription
+
+> Request
+
+```shell
+curl -X POST -H "Token: <api_token>" -d '{
+    "params": {
+        "sid": "9ee583c7d0a8b314c947dccfdcd922ca",
+        "uid": "e0977c97ba60db95dedd8b8926bd0627"
+    }
+}' "http://<kronomentrix_url>/api/rmuser_subscription"
+```
+
+```php
+<?php
+
+$request = new HttpRequest();
+$request->setUrl('http://<kronomentrix_url>/api/rmuser_subscription');
+$request->setMethod(HTTP_METH_POST);
+
+$request->setHeaders(array(
+  'token' => '<api_token>'
+));
+
+$request->setBody('{
+    "params": {
+        "sid": "9ee583c7d0a8b314c947dccfdcd922ca",
+        "uid": "e0977c97ba60db95dedd8b8926bd0627"
+    }
+}');
+
+try {
+  $response = $request->send();
+
+  echo $response->getBody();
+} catch (HttpException $ex) {
+  echo $ex;
+}
+```
+
+```java
+OkHttpClient client = new OkHttpClient();
+
+MediaType mediaType = MediaType.parse("application/octet-stream");
+RequestBody body = RequestBody.create(mediaType, "{\n    \"params\": {\n \"sid\": \"9ee583c7d0a8b314c947dccfdcd922ca\", \"uid\": \"e0977c97ba60db95dedd8b8926bd0627\" }\n}");
+Request request = new Request.Builder()
+  .url("http://<kronomentrix_url>/api/rmuser_subscription")
+  .post(body)
+  .addHeader("token", "<api_token>")
+  .build();
+
+Response response = client.newCall(request).execute();
+```
+
+> Response
+
+```json
+{
+    "removed": "e0977c97ba60db95dedd8b8926bd0627"
+}
+```
+
+This endpoint allows a subscription admin or owner to remove access for another user. The user's ID to be removed must be known. The removed user will NOT be deleted from Kronometrix.
+
+### Request
+
+`http://<kronometrix_url>/api/rmuser_subscription`
+
+Parameter | Details
+--------- | -------
+sid | The ID of the subscription to remove access from
+uid | The ID of the user to be removed
+
+
+### Response
+
+A JSON-encoded structure representing the result of the operation or an error if the operation fails
+
+Field | Details
+----- | -------
+removed | The ID of the user that has been removed
+ | *or*
+error | A text describing the error
+
+<aside class="info">
+Due to the "additive" nature of the ACL implementation, it is possible to receive a successful response even if the user didn't exist or not enough privileges are available.
+</aside>
 
 ## Send data
 
